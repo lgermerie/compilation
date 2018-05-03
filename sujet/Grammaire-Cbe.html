@@ -1,0 +1,91 @@
+<table>
+<tr><td>programme</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>liste-declarations liste-fonctions</td></tr>
+<tr><td>liste-declarations</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>liste-declarations declaration</td></tr>
+<tr><td></td><td>|</td><td> <strong style=color:blue>epsilon</strong></td></tr>
+<tr><td>liste-fontions</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>liste-fonctions fonction</td></tr>
+<tr><td></td><td>|</td><td> <strong style=color:blue>epsilon</strong></td></tr>
+<tr><td>declaration</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>type liste-declarateurs <strong style=color:blue> ; </strong></td></tr>
+<tr><td>liste-declarateurs</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>liste-declarateur <strong style=color:blue> , </strong> declarateur</td></tr>
+<tr><td></td><td>|</td><td>declarateur</td></tr>
+<tr><td>declarateur</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> identificateur </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> * </strong> <strong style=color:blue> identificateur </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> identificateur </strong> <strong style=color:blue> [ </strong> constante <strong style=color:blue> ] </strong></td></tr>
+<tr><td>fonction</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>type-fct <strong style=color:blue> identificateur </strong> <strong style=color:blue> ( </strong> liste-parms <strong style=color:blue> ) </strong> <strong style=color:blue> { </strong> liste-declarations liste-instructions <strong style=color:blue> } </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> extern </strong> type-fct <strong style=color:blue> identificateur </strong> <strong style=color:blue> ( </strong> liste-parms <strong style=color:blue> ) </strong> <strong style=color:blue> ; </strong></td></tr>
+<tr><td>type</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> int </strong></td></tr>
+<tr><td>type-fct</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> void </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> int </strong></td></tr>
+<tr><td>liste-parms</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>liste-parms <strong style=color:blue> , </strong> parm</td></tr>
+<tr><td></td><td>|</td><td> <strong style=color:blue>epsilon</strong></td></tr>
+<tr><td>parm</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> int </strong> <strong style=color:blue> identificateur </strong></td></tr>
+<tr><td>liste-instructions</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>liste-instructions instruction</td></tr>
+<tr><td></td><td>|</td><td> <strong style=color:blue>epsilon</strong></td></tr>
+<tr><td>instruction</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>affectation</td></tr>
+<tr><td></td><td>|</td><td>saut</td></tr>
+<tr><td></td><td>|</td><td>bloc</td></tr>
+<tr><td></td><td>|</td><td>appel</td></tr>
+<tr><td></td><td>|</td><td>instructionlabelise</td></tr>
+<tr><td>instructionlabelise</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> identificateur </strong> <strong style=color:blue> : </strong> instruction</td></tr>
+<tr><td>affectation</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> identificateur </strong> <strong style=color:blue> = </strong> expression <strong style=color:blue> ; </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> identificateur </strong> <strong style=color:blue> = </strong> <strong style=color:blue> * </strong> <strong style=color:blue> identificateur </strong> <strong style=color:blue> ; </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> * </strong> <strong style=color:blue> identificateur </strong> <strong style=color:blue> = </strong> scalaire <strong style=color:blue> ; </strong></td></tr>
+<tr><td>saut</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> goto </strong> <strong style=color:blue> identificateur </strong> <strong style=color:blue> ; </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> if </strong> <strong style=color:blue> ( </strong> condition <strong style=color:blue> ) </strong> <strong style=color:blue> goto </strong> label <strong style=color:blue> ; </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> return </strong> <strong style=color:blue> ; </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> return </strong> scalaire <strong style=color:blue> ; </strong></td></tr>
+<tr><td>bloc</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> { </strong> liste-declarations liste-instructions <strong style=color:blue> } </strong></td></tr>
+<tr><td>appel</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> identificateur </strong> <strong style=color:blue> ( </strong> liste-scalaires <strong style=color:blue> ) </strong> <strong style=color:blue> ; </strong></td></tr>
+<tr><td>scalaire</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> identificateur </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> constante </strong></td></tr>
+<tr><td>expression</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>scalaire binary-op scalaire</td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> - </strong> scalaire</td></tr>
+<tr><td></td><td>|</td><td>scalaire</td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> identificateur </strong> <strong style=color:blue> ( </strong> liste-scalaires <strong style=color:blue> ) </strong></td></tr>
+<tr><td>liste-scalaires</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td>liste-scalaires <strong style=color:blue> , </strong> scalaire</td></tr>
+<tr><td></td><td>|</td><td> <strong style=color:blue>epsilon</strong></td></tr>
+<tr><td>condition</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> ! </strong> <strong style=color:blue> identificateur </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> identificateur </strong></td></tr>
+<tr><td></td><td>|</td><td>scalaire binary-rel scalaire</td></tr>
+<tr><td></td><td>|</td><td>scalaire binary-comp scalaire</td></tr>
+<tr><td>binary-op</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> + </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> - </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> * </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> / </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> << </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> >> </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> & </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> | </strong></td></tr>
+<tr><td>binary-rel</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> && </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> || </strong></td></tr>
+<tr><td>binary-comp</td><td>:</td><td></td></tr>
+<tr><td></td><td></td><td><strong style=color:blue> < </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> > </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> >= </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> <= </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> == </strong></td></tr>
+<tr><td></td><td>|</td><td><strong style=color:blue> != </strong></td></tr>
+</tr></table>

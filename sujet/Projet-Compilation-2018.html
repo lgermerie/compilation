@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="hevea 2.25">
+<style type="text/css">
+.li-itemize{margin:1ex 0ex;}
+.li-enumerate{margin:1ex 0ex;}
+.dd-description{margin:0ex 0ex 1ex 4ex;}
+.dt-description{margin:0ex;}
+.toc{list-style:none;}
+.footnotetext{margin:0ex; padding:0ex;}
+div.footnotetext P{margin:0px; text-indent:1em;}
+.thefootnotes{text-align:left;margin:0ex;}
+.dt-thefootnotes{margin:0em;}
+.dd-thefootnotes{margin:0em 0em 0em 2em;}
+.footnoterule{margin:1em auto 1em 0px;width:50%;}
+.caption{padding-left:2ex; padding-right:2ex; margin-left:auto; margin-right:auto}
+.title{margin:2ex auto;text-align:center}
+.titlemain{margin:1ex 2ex 2ex 1ex;}
+.titlerest{margin:0ex 2ex;}
+.center{text-align:center;margin-left:auto;margin-right:auto;}
+.flushleft{text-align:left;margin-left:0ex;margin-right:auto;}
+.flushright{text-align:right;margin-left:auto;margin-right:0ex;}
+div table{margin-left:inherit;margin-right:inherit;margin-bottom:2px;margin-top:2px}
+td table{margin:auto;}
+table{border-collapse:collapse;}
+td{padding:0;}
+.cellpadding0 tr td{padding:0;}
+.cellpadding1 tr td{padding:1px;}
+pre{text-align:left;margin-left:0ex;margin-right:auto;}
+blockquote{margin-left:4ex;margin-right:4ex;text-align:left;}
+td p{margin:0px;}
+.boxed{border:1px solid black}
+.textboxed{border:1px solid black}
+.vbar{border:none;width:2px;background-color:black;}
+.hbar{border:none;height:2px;width:100%;background-color:black;}
+.hfill{border:none;height:1px;width:200%;background-color:black;}
+.vdisplay{border-collapse:separate;border-spacing:2px;width:auto; empty-cells:show; border:2px solid red;}
+.vdcell{white-space:nowrap;padding:0px; border:2px solid green;}
+.display{border-collapse:separate;border-spacing:2px;width:auto; border:none;}
+.dcell{white-space:nowrap;padding:0px; border:none;}
+.dcenter{margin:0ex auto;}
+.vdcenter{border:solid #FF8000 2px; margin:0ex auto;}
+.minipage{text-align:left; margin-left:0em; margin-right:auto;}
+.marginpar{border:solid thin black; width:20%; text-align:left;}
+.marginparleft{float:left; margin-left:0ex; margin-right:1ex;}
+.marginparright{float:right; margin-left:1ex; margin-right:0ex;}
+.theorem{text-align:left;margin:1ex auto 1ex 0ex;}
+.part{margin:2ex auto;text-align:center}
+</style>
+<title>Projet de compilation en licence informatique (UNS, 2018): mini compilateur C
+</title>
+</head>
+<body >
+<!--HEVEA command line is: hevea Projet-Compilation-2018.tex -->
+<!--CUT STYLE article--><!--CUT DEF section 1 --><table class="title"><tr><td style="padding:1ex"><h1 class="titlemain">Projet de compilation en licence informatique (UNS, 2018): mini compilateur C</h1><h3 class="titlerest">Pr Sid <span style="font-variant:small-caps">Touati</span>, Mme Cinzia <span style="font-variant:small-caps">Di Giusto</span>, Mme Elisabetta <span style="font-variant:small-caps">Di Maria</span> </h3><h3 class="titlerest">2018</h3></td></tr>
+</table><!--TOC section id="sec1" Table des matières-->
+<h2 id="sec1" class="section">Table des matières</h2><!--SEC END --><ul class="toc"><li class="li-toc">
+<a href="#sec2">1  Présentation générale du projet</a>
+</li><li class="li-toc"><a href="#sec3">2  Langage source: Cfe</a>
+<ul class="toc"><li class="li-toc">
+<a href="#sec4">2.1  Description du langage Cfe</a>
+</li><li class="li-toc"><a href="#sec5">2.2  Exemple d’un programme écrit en Cfe</a>
+</li><li class="li-toc"><a href="#sec6">2.3  Grammaire du langage Cfe</a>
+</li></ul>
+</li><li class="li-toc"><a href="#sec7">3  Langage destination: Cbe</a>
+<ul class="toc"><li class="li-toc">
+<a href="#sec8">3.1  Description du langage Cbe</a>
+</li><li class="li-toc"><a href="#sec9">3.2  Exemple d’un programme écrit en Cbe</a>
+</li><li class="li-toc"><a href="#sec10">3.3  Grammaire du langage Cbe</a>
+</li></ul>
+</li><li class="li-toc"><a href="#sec11">4  Traduction de Cfe vers Cbe</a>
+</li><li class="li-toc"><a href="#sec12">5  Conseils pratiques</a>
+</li><li class="li-toc"><a href="#sec13">6  Notation du projet</a>
+</li></ul><p>Le projet est à réaliser par binômes. Il doit être déposé dans l’espace de cours sur <span style="font-family:monospace">jalon.unice.fr</span> dans la boîte de dépôt prévue à cet effet. Pas de soumission par mel. 
+Vous devrez faire une courte soutenance de 10 minutes, pas de rapport demandé.</p><p>Il est demandé de réaliser un compilateur, à l’aide des outils <span style="font-weight:bold">lex</span> et <span style="font-weight:bold">yacc</span>. Votre archive de projet devra être nommée <span style="font-weight:bold">Projet-Nom1-Nom2.tar.gz</span>. Elle doit contenir tous les sources de votre compilateur, les descriptions lex et yacc, ainsi que les programmes de tests. Il est vivement recommandé de fournir un fichier <span style="font-family:monospace">LisezMoi.txt</span> précisant comment compiler et tester votre compilateur, et les problèmes éventuels (pour que le correcteur sache à l’avance si votre projet fonctionne ou pas). Un jeu de tests (programmes C que votre compilateur devra compiler) vous est fourni dans le répertoire adéquat.</p>
+<!--TOC section id="sec2" Présentation générale du projet-->
+<h2 id="sec2" class="section">1  Présentation générale du projet</h2><!--SEC END --><p>Le but de ce projet est de réaliser un mini compilateur C (pour un sous langage de C).Votre compilateur prendra en entrée un code C simplifié et génèrera un code trois adresses dans un langage destination (défini ultérieurement). Le langage C simplifié en entrée s’appelle Cfe (C-frontend) et le langage en sortie Cbe (C-backend).<br>
+
+Le langage Cbe est également un sous-ensemble de C, mais plus proche de l’assembleur. Ainsi, un code écrit en Cfe ou en Cbe peut être compilé et testé avec n’importe quel compilateur C comme gcc.</p>
+<!--TOC section id="sec3" Langage source: Cfe-->
+<h2 id="sec3" class="section">2  Langage source: Cfe</h2><!--SEC END --><p>
+On considère le langage Cfe dont les caractéristiques sont les suivantes. Il s’agit d’un sous-ensemble de C qui doit pouvoir être compilé avec un compilateur C classique comme gcc. </p>
+<!--TOC subsection id="sec4" Description du langage Cfe-->
+<h3 id="sec4" class="subsection">2.1  Description du langage Cfe</h3><!--SEC END --><ul class="itemize"><li class="li-itemize">
+Structure du programme:
+<ul class="itemize"><li class="li-itemize">
+	la structure d’un programme est la suivante:
+	<span style="font-style:italic">	</span><div class="center"><span style="font-style:italic">
+	&lt;declarations&gt;<br>
+	&lt;fonctions&gt;
+	</span></div><span style="font-style:italic">
+	</span>
+	</li><li class="li-itemize">toute variable doit être déclarée avant utilisation.
+	</li></ul></li><li class="li-itemize">Les identificateurs:
+<ul class="itemize"><li class="li-itemize">
+ils ne peuvent pas porter le nom d’un mot clé réserve : <span style="font-weight:bold">extern, int, void, for, while, if, then, else, switch, case, default, break</span>.
+	</li></ul> 
+	
+</li><li class="li-itemize">Les variables: 
+<ul class="itemize"><li class="li-itemize">
+elles ne peuvent être déclarés qu’en début de programme (variables globales) ou qu’au début d’un bloc (variables locales). 
+</li><li class="li-itemize">elles doivent commencer par une lettre,
+</li><li class="li-itemize">elles sont de type entier ou tableau d’entiers à un nombre quelconque de dimensions. 
+</li></ul> </li><li class="li-itemize">Les constantes: 
+<ul class="itemize"><li class="li-itemize">
+elles sont entières et exprimées en base 10. 
+</li></ul> </li><li class="li-itemize">Les fonctions: 
+<ul class="itemize"><li class="li-itemize">
+structure d’une fonction:
+	<span style="font-style:italic">	</span><div class="center"><span style="font-style:italic">
+	&lt;type&gt; identificateur (&lt;liste_parametres&gt;)<br>
+	{<br>
+	&lt;bloc&gt;<br>
+	} 
+	</span></div><span style="font-style:italic">
+	</span></li><li class="li-itemize"><span style="font-weight:bold">identificateur</span> est le nom de la fonction
+</li><li class="li-itemize">le <span style="font-weight:bold">type</span> d’une fonction est soit <span style="font-weight:bold">int</span> soit <span style="font-weight:bold">void</span>
+</li><li class="li-itemize">un seul niveau de déclaration de fonctions est possible (pas d’imbrications de déclarations)
+</li><li class="li-itemize">les paramètres sont des entiers
+</li><li class="li-itemize">une fonction peut être déclarée <span style="font-weight:bold">extern</span>. Dans ce cas, elle est déclarée mais pas définie/implémentée dans le programme (son code est dans un autre fichier). Cela permet de faire référencer des fonctions de librairie ou écrites dans un autre fichier tout en permettant de vérifier que toutes les fonctions utilisées soient déclarées. 
+</li></ul> </li><li class="li-itemize">Les instructions considérées sont: 
+	 <ul class="itemize"><li class="li-itemize">
+	L’affectation <span style="font-style:italic">var = expression</span> 
+	</li><li class="li-itemize">les structures de contrôle 
+	</li><li class="li-itemize"><span style="font-weight:bold">return</span>. Elle peut retourner une valeur ou non. 
+	 </li></ul> 
+	 
+</li><li class="li-itemize">Les instructions de contrôle ont la même sémantique que celle du C: 
+	<ul class="itemize"><li class="li-itemize">
+	l’instruction <span style="font-weight:bold">if..then</span> et <span style="font-weight:bold">if..then..else</span>
+	</li><li class="li-itemize">l’instruction <span style="font-weight:bold">switch</span>, avec <span style="font-weight:bold">case</span> et <span style="font-weight:bold">default</span>, 
+	</li><li class="li-itemize">l’instruction <span style="font-weight:bold">for</span>
+	 </li><li class="li-itemize">l’instruction <span style="font-weight:bold">while</span>
+	 </li><li class="li-itemize">l’instruction <span style="font-weight:bold">break</span>
+	 </li></ul> 
+	 
+</li><li class="li-itemize">Les conditions:
+	 <ul class="itemize"><li class="li-itemize">
+	une condition est toujours entre parenthèses
+	</li><li class="li-itemize">les opérateurs de comparaison dont on dispose sont : <span style="font-weight:bold">&gt;, &lt;, &lt;=, &gt;=, ==, !=</span>
+	</li><li class="li-itemize">les opérateurs booléens sont: <span style="font-weight:bold">!, &amp;&amp;, || </span>
+	</li></ul>
+</li><li class="li-itemize">Les expressions :
+	 <ul class="itemize"><li class="li-itemize">
+	les opérateurs binaires dont on dispose sont: <span style="font-weight:bold">+, -, *, /, &lt;&lt;, &gt;&gt;, &amp;, |</span>
+	</li><li class="li-itemize">une expression est composée de valeurs numériques et/ou de variables et d’opérateurs binaires.
+	</li></ul>
+</li><li class="li-itemize">Les commentaires :
+	<ul class="itemize"><li class="li-itemize">
+	les commentaires débutent par /* et se terminent par */
+	</li><li class="li-itemize">ils peuvent être sur plusieurs lignes
+	</li></ul>
+	
+</li></ul>
+<!--TOC subsection id="sec5" Exemple d’un programme écrit en Cfe-->
+<h3 id="sec5" class="subsection">2.2  Exemple d’un programme écrit en Cfe</h3><!--SEC END --><p>
+Le code <a href="exempleCfe.c"><span style="font-family:monospace">exempleCfe.c</span></a> est fourni en exemple. Vous pouvez tester que gcc le compile correctement avec la commande <span style="font-family:monospace">gcc -c exempleCfe.c</span>, cela produira un code objet. 
+</p>
+<!--TOC subsection id="sec6" Grammaire du langage Cfe-->
+<h3 id="sec6" class="subsection">2.3  Grammaire du langage Cfe</h3><!--SEC END --><p>
+La grammaire du langage Cfe est <a href="Grammaire-Cfe.html">décrite ici</a>. Nous fournissons une description yacc de départ dans le fichier appelé <a href="Cfe.y"><span style="font-family:monospace">cfe.y</span></a>. Vous pouvez modifier ou compléter cette description yacc pour le besoin de votre projet.<br>
+
+Également, nous fournissons une description lex du langage C dans le fichier nommé <a href="ANSI-C.l"><span style="font-family:monospace">ANSI-C.l</span></a>. Vous pouvez modifier ou compléter cette description lex pour la rendre correcte vis à vis du langage Cbe; par exemple, les mots clés du langage C qui n’appartiennent pas au langage Cbe doivent être enlevés, etc.</p>
+<!--TOC section id="sec7" Langage destination: Cbe-->
+<h2 id="sec7" class="section">3  Langage destination: Cbe</h2><!--SEC END -->
+<!--TOC subsection id="sec8" Description du langage Cbe-->
+<h3 id="sec8" class="subsection">3.1  Description du langage Cbe</h3><!--SEC END --><p>
+Le langage destination Cbe est un sous-ensemble du C, proche de l’assembleur. La structure du programme est la même que Cfe et les déclarations de variables et fonctions se font de la même façon. Les types permis pour les variables sont <span style="font-weight:bold">int</span> et <span style="font-weight:bold">int *</span>. De plus, les instructions doivent correspondre à du code 3 adresses. Un code 3 adresses est une séquence d’instructions qui sont de la forme: <span style="font-weight:bold">x = y op z</span>, où <span style="font-weight:bold">x, y et z</span> sont des noms, des constantes ou des variables temporaires introduites par le compilateur; <span style="font-weight:bold">op</span> désigne n’importe quel opérateur. Un programme Cbe doit pouvoir être compilé avec n’importe quel compilateur C comme gcc.</p><p>Une description plus complète est donnée ci-dessous. 
+</p><ul class="itemize"><li class="li-itemize">
+Structure du programme:
+<ul class="itemize"><li class="li-itemize">
+	la structure d’un programme est la suivante:
+	<span style="font-style:italic">	</span><div class="center"><span style="font-style:italic">
+	&lt;declarations&gt;<br>
+	&lt;fonctions&gt;
+	</span></div><span style="font-style:italic">
+	</span>
+	</li><li class="li-itemize">toute variable doit être déclarée avant utilisation.
+	</li></ul></li><li class="li-itemize">Les identificateurs:
+<ul class="itemize"><li class="li-itemize">
+ils ne peuvent pas porter le nom d’un mot clé réserve : <span style="font-weight:bold">extern, int, void, if, goto</span>.
+	</li></ul> 
+	
+</li><li class="li-itemize">Les variables: 
+<ul class="itemize"><li class="li-itemize">
+elles ne peuvent être déclarées qu’en début de programme (variables globales) ou qu’au début d’un bloc (variables locales). 
+</li><li class="li-itemize">elles sont de type entier ou pointeur sur entier. 
+</li></ul> </li><li class="li-itemize">Les constantes: 
+<ul class="itemize"><li class="li-itemize">
+elles sont entières et exprimées en base 10. 
+</li></ul> </li><li class="li-itemize">Les fonctions: 
+<ul class="itemize"><li class="li-itemize">
+structure d’une fonction:
+	<span style="font-style:italic">	</span><div class="center"><span style="font-style:italic">
+	&lt;type&gt; identificateur (&lt;liste_parametres&gt;)<br>
+	{<br>
+	&lt;bloc&gt;<br>
+	} 
+	</span></div><span style="font-style:italic">
+	</span>
+</li><li class="li-itemize"><span style="font-weight:bold">identificateur</span> est le nom de la fonction
+</li><li class="li-itemize">le <span style="font-weight:bold">type</span> d’une fonction est soit <span style="font-weight:bold">int</span> soit <span style="font-weight:bold">void</span>
+</li><li class="li-itemize">un seul niveau de déclaration de fonctions est possible (pas d’imbrications de déclarations)
+</li><li class="li-itemize">les paramètres sont des entiers
+</li><li class="li-itemize">une fonction peut être déclarée <span style="font-weight:bold">extern</span>. Dans ce cas, elle est déclarée mais pas définie/implémentée dans le programme (son code est dans un autre fichier). Cela permet de faire référencer des fonctions de librairie ou écrites dans un autre fichier tout en permettant de vérifier que toutes les fonctions utilisées soient déclarées. 
+</li></ul> </li><li class="li-itemize">Les instructions considérées sont:
+	 <ul class="itemize"><li class="li-itemize">
+	 les appels de fonctions, où les paramètres ne sont que des noms de variables ou des constantes.
+	</li><li class="li-itemize">les seules instructions d’affectation autorisées sont de la forme suivante, avec <span style="font-weight:bold">x</span> un nom de variable, <span style="font-weight:bold">y</span> et <span style="font-weight:bold">z</span> des constantes ou des noms de variables et <span style="font-weight:bold">t</span> un nom de tableau ou de pointeur sur entier: 
+	<ul class="itemize"><li class="li-itemize">
+	 <span style="font-weight:bold">x = y op z</span>
+	 </li><li class="li-itemize"><span style="font-weight:bold">x = - y</span>
+	 </li><li class="li-itemize"><span style="font-weight:bold">*t = z</span>
+	 </li><li class="li-itemize"><span style="font-weight:bold">x = *t</span>
+	 </li><li class="li-itemize"><span style="font-weight:bold">x = f( ... )</span> avec f une fonction dont les arguments ne sont que des constantes ou des noms de variables.
+	 </li></ul> 
+	 </li><li class="li-itemize">le branchement inconditionnel : de la forme <span style="font-weight:bold">goto L</span> avec L un nom de label déclaré par <span style="font-weight:bold">L:</span> 
+	 </li><li class="li-itemize">le branchement conditionnel : de la forme <span style="font-weight:bold">if (x op y) goto L</span> ou <span style="font-weight:bold">if (!x) goto L</span> avec <span style="font-weight:bold">x, y</span> des noms de variables ou des constantes, <span style="font-weight:bold">op</span> un opérateur binaire 
+	 </li><li class="li-itemize">Les noms des labels (ou étiquettes) doivent respecter les mêmes règles que les identificateurs. 
+	 </li><li class="li-itemize">l’instruction <span style="font-weight:bold">return</span>. Elle peut retourner une valeur sous la forme d’un nom de variable ou d’une constante. 
+	 </li></ul> 
+</li><li class="li-itemize">Les commentaires :
+	<ul class="itemize"><li class="li-itemize">
+	les commentaires débutent par /* et se terminent par */
+	</li><li class="li-itemize">ils peuvent être sur plusieurs lignes
+	</li></ul></li></ul>
+<!--TOC subsection id="sec9" Exemple d’un programme écrit en Cbe-->
+<h3 id="sec9" class="subsection">3.2  Exemple d’un programme écrit en Cbe</h3><!--SEC END --><p>
+Le code <a href="exempleCbe.c"><span style="font-family:monospace">exempleCbe.c</span></a> est fourni en exemple. Vous pouvez tester que gcc le compile correctement avec la commande <span style="font-family:monospace">gcc -c exempleCbe.c</span>, cela produira un code objet. 
+</p>
+<!--TOC subsection id="sec10" Grammaire du langage Cbe-->
+<h3 id="sec10" class="subsection">3.3  Grammaire du langage Cbe</h3><!--SEC END --><p>
+La grammaire du langage Cbe est <a href="Grammaire-Cbe.html">décrite ici</a>. Nous fournissons sa description yacc dans le fichier appelé <a href="Cbe.y"><span style="font-family:monospace">cbe.y</span></a>. Vous pouvez modifier ou compléter cette description yacc pour votre besoin. Si vous modifiez la grammaire, expliquez nous pourquoi l’avez vous fait durant la soutenance, et également dans le fichiez <span style="font-family:monospace">LisezMoi.txt</span><br>
+
+Pour une description lex du langage Cbe, vous pouvez démarrer avec le fichier nommé <a href="ANSI-C.l"><span style="font-family:monospace">ANSI-C.l</span></a>. Vous pouvez modifier ou compléter cette description lex pour la rendre correcte vis à vis du langage Cbe. Les descriptions lex et yacc du langage Cbe ne sont pas nécessaires pour réaliser votre compilateur, par contre ils vous serviraient pour générer un parseur pour le langage Cbe, afin de vérifier que votre code généré est correct lexicalement et syntaxiquement. </p>
+<!--TOC section id="sec11" Traduction de Cfe vers Cbe-->
+<h2 id="sec11" class="section">4  Traduction de Cfe vers Cbe</h2><!--SEC END --><p>
+Le but de ce projet est de faire le compilateur du langage d’entée Cfe vers le langage Cbe. La traduction de Cfe vers Cbe oblige à introduire de nouvelles variables afin de respecter les instructions 3 adresses. Le compilateur pourra introduire un nombre illimité de variables. Les nouvelles variables générées devront commencer par un caractère souligné et devront être déclarées en tant que variables locales, avec le type approprié.<br>
+
+D’autre part, comme les tableaux multidimensionnels ne sont pas autorisés en Cbe, les tableaux multidimensionnels de Cfe devront être linéarisés (transformés en tableaux d’une dimension).<br>
+
+Etant donné que l’on veut se rapprocher le plus possible du modèle "assembleur", on impose les traductions suivantes pour les structures de contrôle du langage Cfe:
+</p><ul class="itemize"><li class="li-itemize">
+La boucle <span style="font-weight:bold">while</span> devient:<p>	<span style="font-style:italic">	</span></p><blockquote class="quote"><span style="font-style:italic">
+	goto L1<br>
+	L2 : &lt; corps_de_la_boucle &gt;<br>
+	L1 : if ( &lt; test &gt; ) goto L2
+	</span></blockquote><p><span style="font-style:italic">
+	</span>
+</p></li><li class="li-itemize">L’instruction <span style="font-weight:bold">if</span> devient:
+	<span style="font-style:italic">	</span><blockquote class="quote"><span style="font-style:italic">	 	
+	if (! &lt; test &gt; ) goto L<br>
+	&lt; instruction(s) &gt; /* du then */<br>
+	L : &lt; suite_du_programme &gt;	
+	</span></blockquote><span style="font-style:italic">
+	</span>
+</li><li class="li-itemize">L’instruction <span style="font-weight:bold">switch</span> peut être traduite en une série de comparaisons (entre la valeur de l’expression et des cases) et de <span style="font-weight:bold">goto</span>
+</li><li class="li-itemize">L’instruction <span style="font-weight:bold">break</span> peut être traduite en un <span style="font-weight:bold">goto</span> vers l’instruction suivant immédiatement le bloc courant. Notez que le <span style="font-weight:bold">break</span> peut être utilisé ailleurs que dans un <span style="font-weight:bold">switch</span>
+</li><li class="li-itemize">Un exemple de traduction de la boucle <span style="font-weight:bold">for</span> est donné dans le code <a href="exempleCbe.c"><span style="font-family:monospace">exempleCbe.c</span></a>, qui est la traduction en Cbe du programme précédent en Cfe. Les variables crées par le compilateur ont des noms qui commencent par un souligné. <a href="exempleCbe.c"><span style="font-family:monospace">exempleCbe.c</span></a> est une traduction du code <a href="exempleCfe.c"><span style="font-family:monospace">exempleCfe.c</span></a> , les deux codes devraient fournir le même résultat.<sup><a id="text1" href="#note1">1</a></sup>.
+</li></ul>
+<!--TOC section id="sec12" Conseils pratiques-->
+<h2 id="sec12" class="section">5  Conseils pratiques</h2><!--SEC END --><p>
+Un projet de compilation est très important dans la vie d’un étudiant en informatique. Pour beaucoup d’entre vous, c’est probablement la seule occasion dans votre carrière d’écrire un compilateur. Il est donc important de faire des efforts pour le réaliser jusqu’au bout, car c’est travail très formateur que des étudiants des autres disciplines scientifiques ne font pas.<br>
+
+Vous êtes autorisés à communiquer entre vous tous (tous les étudiants), à vous échanger des idées et des astuces, à vous entre-aider pour comprendre et progresser ensemble. En revanche il est interdit de soumettre un projet qui n’est pas le fruit de votre travail: interdiction formelle de copier le code d’une autre personne, ou qu’une personne fasse le projet à la place d’une autre personne. Ceci constitue une fraude.<br>
+
+Concernant le travail par binôme, nous ne voulons pas qu’un des deux membres fasse tout le projet pour l’autre. Il faut apprendre à travailler en équipe pour apprendre. Les enseignants sont capables de discerner si un étudiant a fourni des efforts ou pas dans un travail de binôme, et peuvent décider de donner des notes différentes. <br>
+
+Par expérience, les étudiants trouvent un projet de compilation difficile. C’est pas faux. Ci-dessous quelques conseils:
+</p><ul class="itemize"><li class="li-itemize">
+Le projet de compilation est un effort sur tout le semestre. Commencez le dès que vous abordez l’analyse lexico-syntaxique en TD. N’attendez pas les dernières semaines du semestre pour commencer votre projet, car vous découvrirez des difficultés techniques.
+</li><li class="li-itemize">Commencez par tester votre analyseur lexical en premier lieu, et vérifiez que tous les programmes tests fournis passent correctement (à savoir que les tokens sont correctement analysés par votre analyseur lexical). Vérifiez sa robustesse en modifiant les programmes tests pour provoquer des erreurs lexicales: introduisez des caractères interdits, des noms de variables incorrects, etc.
+</li><li class="li-itemize">Une fois que vous êtes sûrs que votre analyseur lexical fonctionne correctement, vérifiez que votre parseur (analyseur lexico-syntaxique) fonctionne sur tous les programmes tests. Vérifiez sa robustesse en modifiant les programmes tests pour provoquer des erreurs syntaxiques.</li><li class="li-itemize">Une fois que vous estimez que votre parseur est fiable, commencez à introduire des routines sémantiques yacc qui affichent des messages appropriés durant la compilation afin de tester que les routines sémantiques s’exécutent correctement. Ce sera le squelette de votre traduction dirigée par la syntaxe, que vous devrez compléter pour la génération de code. </li><li class="li-itemize">Attention, en langage C, contrairement à d’autres langages, les chaines de caractères doivent être allouées en mémoire explicitement. Si une routines sémantique de yacc écrive dans une chaine de caractères non allouée en mémoire, votre compilateur plantera.</li></ul>
+<!--TOC section id="sec13" Notation du projet-->
+<h2 id="sec13" class="section">6  Notation du projet</h2><!--SEC END --><p>Le projet sera noté sur 20 points, 5 points pour la soutenance et 15 points pour le compilateur. La note du projet comptera pour 50% de la note finale en compilation, l’examen terminal comptera pour les 50% restant.</p><p>Pour la soutenance, il est demandé de présenter votre travail de façon concise avec des slides: les difficultés rencontrées et comment vous les avez traitées, quelles sont les structures de données employées dans votre compilateur, ce que fait au final votre compilateur et ce qu’il ne fait pas, etc. C’est un moment d’échange où il faut être honnête avec l’enseignant. La durée sera de 10 min (5-6 slides), il est recommandé de s’entrainer avant ! La soutenance ne devra pas être un récital des notions étudiées en cours. <br>
+
+Consultez le fichier <a href="Tests/Lisezmoi.txt"><span style="font-family:monospace">Tests/Lisezmoi.txt</span></a> pour savoir comment allons nous procéder pour tester votre projet. Concernant la notation de votre compilateur (sur 15 points), ci-dessous quelques précisions:
+</p><ul class="itemize"><li class="li-itemize">
+Si aucun code source n’est fourni dans l’archive de votre projet, la note sera 0.
+</li><li class="li-itemize">Si le code source de votre compilateur ne compile pas avec gcc, <span style="font-style:italic">i.e.</span> si l’enseignant n’arrive pas à générer l’exécutable de votre compilateur, la note sera en dessous de 7,5.
+</li><li class="li-itemize">Si votre compilateur s’exécute sur des programmes tests, mais il plante, sa note sera en dessous de 7,5.
+</li><li class="li-itemize">Si votre compilateur s’exécute sur tous les programmes tests sans planter, mais ne génère aucun code (ie votre compilateur est juste un parseur), la note sera en dessous de 7,5.
+</li><li class="li-itemize">Si votre compilateur s’exécute sur des programmes tests, mais génère des codes faux pour certains et des codes corrects pour d’autres, la note sera supérieure à 7,5.
+</li><li class="li-itemize">Si votre compilateur s’exécute correctement sur tous les programmes tests et qu’il génère du code correct pour tous les programmes tests, la note sera 15.
+</li></ul><p>Nous vous souhaitons tout le succès.<br>
+Pr Sid <span style="font-variant:small-caps">Touati</span>, Mme Cinzia <span style="font-variant:small-caps">Di Giusto</span>, Mme Elisabetta <span style="font-variant:small-caps">Di Maria</span> </p><!--BEGIN NOTES document-->
+<hr class="footnoterule"><dl class="thefootnotes"><dt class="dt-thefootnotes">
+<a id="note1" href="#text1">1</a></dt><dd class="dd-thefootnotes"><div class="footnotetext">Le code de la fonction <span style="font-family:monospace">printd</span> se trouve dans le fichier <a href="Tests/printd.c"><span style="font-family:monospace">Tests/printd.c</span></a></div></dd></dl>
+<!--END NOTES-->
+<!--CUT END -->
+<!--HTMLFOOT-->
+<!--ENDHTML-->
+<!--FOOTER-->
+<hr style="height:2"><blockquote class="quote"><em>Ce document a été traduit de L<sup>A</sup>T<sub>E</sub>X par </em><a href="http://hevea.inria.fr"><em>H</em><em><span style="font-size:small"><sup>E</sup></span></em><em>V</em><em><span style="font-size:small"><sup>E</sup></span></em><em>A</em></a></blockquote></body>
+</html>
