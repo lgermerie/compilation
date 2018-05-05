@@ -51,6 +51,14 @@ IS                      (u|U|l|L)*
 "=="                    {return EQ;}
 "!="                    {return NEQ;}
 "!"                     {return NOT;}
+"+"                     {return PLUS;}
+"-"                     {return MOINS;}
+"*"                     {return MUL;}
+"/"                     {return DIV;}
+"&"                     {return BAND;}
+"|"                     {return BOR;}
+"<"                     {return LT;}
+">"                     {return GT;}
 
 [ \t\v\n\f]             { /* A completer */ }
 .                       { return yytext[0]; }

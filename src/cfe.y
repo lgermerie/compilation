@@ -144,7 +144,8 @@ binary_comp	:
 %%
 
 void yyerror (char const *s) {
-	fprintf (stderr, "%s\n", s);
+	//fprintf (stderr, "%s\n", s);
+	fprintf(stderr, "syntax error : %c\n", yychar);
 }
 
 int main(void) {
