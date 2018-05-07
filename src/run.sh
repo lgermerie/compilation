@@ -12,7 +12,7 @@ case $OS in
 
   'Darwin')
     OS='Mac'
-    gcc lex.yy.c cfe.tab.c -o try -LFL
+    gcc lex.yy.c cfe.tab.c -o try -ll
     ;;
   *) ;;
 esac
