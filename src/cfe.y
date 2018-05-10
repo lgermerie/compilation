@@ -17,6 +17,11 @@
 %left LAND LOR
 %nonassoc THEN
 %nonassoc ELSE
+
+%union {
+    char* nom;  /* Pour réccupérer le nom de l'identificateur */
+}
+
 %left OP
 %left REL
 %start programme
