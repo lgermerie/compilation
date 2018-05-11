@@ -87,7 +87,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 21 "cfe.y" /* yacc.c:1909  */
+#line 24 "cfe.y" /* yacc.c:1909  */
 
     char* nom;  /* Pour réccupérer le nom de l'identificateur */
 

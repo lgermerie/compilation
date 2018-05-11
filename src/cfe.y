@@ -1,8 +1,11 @@
 %{
 	#include<stdio.h>
 	#include<stdlib.h>
+	#include<string.h>
+	#include"symTable.h"
 	int yylex();
 	void yyerror(char const *s);
+	int level=0;//niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
 %}
 
 %error-verbose
@@ -49,7 +52,9 @@ declarateur	:
 	|	declarateur '[' CONSTANTE ']'
 ;
 fonction	:
-		type IDENTIFICATEUR '(' liste_parms ')' '{' liste_declarations liste_instructions '}'
+		type IDENTIFICATEUR '(' liste_parms ')' '{' liste_declarations liste_instructions '}' {level=1;//passage aux déclarations internes
+																																														///actions...
+																																													level=0;}
 	|	EXTERN type IDENTIFICATEUR '(' liste_parms ')' ';'
 ;
 type	:
@@ -155,4 +160,16 @@ void yyerror (char const *s) {
 int main(void) {
 	yyparse();
 	fprintf(stdout, "alright alright alright \n");
+	char *test_global = "var1";
+	char *test_local = "var2";
+	char *test_local2 = "var3";
+
+	add_global(test_global);
+	add_local(test_local);
+	add_local(test_local2);
+
+	print_tables();
+
+	clean_local();
+	clean_global();
 }

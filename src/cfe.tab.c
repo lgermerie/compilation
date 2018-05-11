@@ -66,10 +66,13 @@
 
 	#include<stdio.h>
 	#include<stdlib.h>
+	#include<string.h>
+	#include"symTable.h"
 	int yylex();
 	void yyerror(char const *s);
+	int level=0;//niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
 
-#line 73 "cfe.tab.c" /* yacc.c:339  */
+#line 76 "cfe.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -146,11 +149,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 21 "cfe.y" /* yacc.c:355  */
+#line 24 "cfe.y" /* yacc.c:355  */
 
     char* nom;  /* Pour réccupérer le nom de l'identificateur */
 
-#line 154 "cfe.tab.c" /* yacc.c:355  */
+#line 157 "cfe.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -167,7 +170,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 171 "cfe.tab.c" /* yacc.c:358  */
+#line 174 "cfe.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -468,14 +471,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    30,    30,    33,    34,    37,    38,    41,    44,    45,
-      48,    49,    52,    53,    56,    57,    60,    61,    62,    65,
-      68,    69,    72,    73,    74,    75,    76,    77,    80,    81,
-      84,    85,    86,    87,    88,    91,    92,    93,    96,    99,
-     102,   105,   106,   109,   110,   111,   112,   113,   114,   117,
-     118,   119,   122,   123,   124,   125,   128,   129,   130,   131,
-     132,   133,   134,   135,   138,   139,   142,   143,   144,   145,
-     146,   147
+       0,    33,    33,    36,    37,    40,    41,    44,    47,    48,
+      51,    52,    55,    58,    61,    62,    65,    66,    67,    70,
+      73,    74,    77,    78,    79,    80,    81,    82,    85,    86,
+      89,    90,    91,    92,    93,    96,    97,    98,   101,   104,
+     107,   110,   111,   114,   115,   116,   117,   118,   119,   122,
+     123,   124,   127,   128,   129,   130,   133,   134,   135,   136,
+     137,   138,   139,   140,   143,   144,   147,   148,   149,   150,
+     151,   152
 };
 #endif
 
@@ -1363,8 +1366,16 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
-#line 1368 "cfe.tab.c" /* yacc.c:1646  */
+        case 12:
+#line 55 "cfe.y" /* yacc.c:1646  */
+    {level=1;//passage aux déclarations internes
+																																														///actions...
+																																													level=0;}
+#line 1375 "cfe.tab.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1379 "cfe.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1592,7 +1603,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 149 "cfe.y" /* yacc.c:1906  */
+#line 154 "cfe.y" /* yacc.c:1906  */
 
 
 void yyerror (char const *s) {
@@ -1602,4 +1613,16 @@ void yyerror (char const *s) {
 int main(void) {
 	yyparse();
 	fprintf(stdout, "alright alright alright \n");
+	char *test_global = "var1";
+	char *test_local = "var2";
+	char *test_local2 = "var3";
+
+	add_global(test_global);
+	add_local(test_local);
+	add_local(test_local2);
+
+	print_tables();
+
+	clean_local();
+	clean_global();
 }

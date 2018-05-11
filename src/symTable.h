@@ -8,11 +8,6 @@ typedef struct _symbol {
  int is_init;
 } symbol;
 
-symbol *newTable() {
-  symbol *table[SIZE];
-  return *table;
-}
-
 symbol *global_Vars[100];
 symbol *local_Vars[100];
 int max_Global = 0;
@@ -47,9 +42,9 @@ symbol fetch_local(char *name) {
 
 void add_symbol(char *name, symbol *table[], int *max) {
   if (*max < 100) {
-    symbol new_sym;
-    strcpy(new_sym.name, name);
-    *table[*max] = new_sym;
+    symbol *new_sym = malloc(sizeof(symbol));
+    new_sym->name=strdup(name);
+    table[*max] = new_sym;
     (*max)++;
   }
 }
@@ -75,12 +70,20 @@ int is_initialized(symbol s) {
   return s.is_init;
 }
 
-void empty_local() {
+void clean_local() {
   for (int i = 0; i < max_Local; i++) {
-    local_Vars[i] = NULL;
+    free(local_Vars[i]);
   }
   max_Local = 0;
 }
+
+void clean_global() {
+  for (int i = 0; i < max_Global; i++) {
+    free(global_Vars[i]);
+  }
+  max_Global = 0;
+}
+
 
 void print_tables() {
   printf("Global vars : \n");
@@ -98,4 +101,5 @@ void print_tables() {
       printf("\n");
     }
   }
+  printf("\n");
 }

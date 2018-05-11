@@ -8,7 +8,6 @@ IS                      (u|U|l|L)*
 %{
 #include <stdio.h>
 #include "cfe.tab.h"
-#include "symTable.h"
 %}
 
 %x IN_COMMENT

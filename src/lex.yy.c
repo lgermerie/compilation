@@ -499,10 +499,9 @@ char *yytext;
 #line 9 "cfe.l"
 #include <stdio.h>
 #include "cfe.tab.h"
-#include "symTable.h"
-#line 504 "lex.yy.c"
+#line 503 "lex.yy.c"
 
-#line 506 "lex.yy.c"
+#line 505 "lex.yy.c"
 
 #define INITIAL 0
 #define IN_COMMENT 1
@@ -720,9 +719,9 @@ YY_DECL
 		}
 
 	{
-#line 16 "cfe.l"
+#line 15 "cfe.l"
 
-#line 726 "lex.yy.c"
+#line 725 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -781,73 +780,73 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 17 "cfe.l"
+#line 16 "cfe.l"
 {return BREAK;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 18 "cfe.l"
+#line 17 "cfe.l"
 {return CASE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 19 "cfe.l"
+#line 18 "cfe.l"
 {return DEFAULT;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 20 "cfe.l"
+#line 19 "cfe.l"
 {return ELSE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 21 "cfe.l"
+#line 20 "cfe.l"
 {return EXTERN;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 22 "cfe.l"
+#line 21 "cfe.l"
 {return FOR;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 23 "cfe.l"
+#line 22 "cfe.l"
 {return IF;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 24 "cfe.l"
+#line 23 "cfe.l"
 {return INT;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 25 "cfe.l"
+#line 24 "cfe.l"
 {return RETURN;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 26 "cfe.l"
+#line 25 "cfe.l"
 {return SWITCH;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 27 "cfe.l"
+#line 26 "cfe.l"
 {return VOID;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 28 "cfe.l"
+#line 27 "cfe.l"
 {return WHILE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 30 "cfe.l"
+#line 29 "cfe.l"
 {return IDENTIFICATEUR;}
 	YY_BREAK
 
 case 14:
 YY_RULE_SETUP
-#line 33 "cfe.l"
+#line 32 "cfe.l"
 {printf("FOUND COMMENT\n");
                         BEGIN(IN_COMMENT);}
 	YY_BREAK
@@ -855,134 +854,134 @@ YY_RULE_SETUP
 
 case 15:
 YY_RULE_SETUP
-#line 37 "cfe.l"
+#line 36 "cfe.l"
 {printf("END COMMENT\n");/*mentionner dans la soutenance*/
                         BEGIN(INITIAL);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 39 "cfe.l"
+#line 38 "cfe.l"
 // eat comment in chunks
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 40 "cfe.l"
+#line 39 "cfe.l"
 // eat the lone star
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 41 "cfe.l"
+#line 40 "cfe.l"
 yylineno++;
 	YY_BREAK
 
 case 19:
 YY_RULE_SETUP
-#line 44 "cfe.l"
+#line 43 "cfe.l"
 {return CONSTANTE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 46 "cfe.l"
+#line 45 "cfe.l"
 {return RSHIFT;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 47 "cfe.l"
+#line 46 "cfe.l"
 {return LSHIFT;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 48 "cfe.l"
+#line 47 "cfe.l"
 {return LAND;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 49 "cfe.l"
+#line 48 "cfe.l"
 {return LOR;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 50 "cfe.l"
+#line 49 "cfe.l"
 {return LEQ;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 51 "cfe.l"
+#line 50 "cfe.l"
 {return GEQ;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 52 "cfe.l"
+#line 51 "cfe.l"
 {return EQ;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 53 "cfe.l"
+#line 52 "cfe.l"
 {return NEQ;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 54 "cfe.l"
+#line 53 "cfe.l"
 {return NOT;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 55 "cfe.l"
+#line 54 "cfe.l"
 {return PLUS;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 56 "cfe.l"
+#line 55 "cfe.l"
 {return MOINS;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 57 "cfe.l"
+#line 56 "cfe.l"
 {return MUL;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 58 "cfe.l"
+#line 57 "cfe.l"
 {return DIV;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 59 "cfe.l"
+#line 58 "cfe.l"
 {return BAND;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 60 "cfe.l"
+#line 59 "cfe.l"
 {return BOR;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 61 "cfe.l"
+#line 60 "cfe.l"
 {return LT;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 62 "cfe.l"
+#line 61 "cfe.l"
 {return GT;}
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 64 "cfe.l"
+#line 63 "cfe.l"
 { /* A completer */ }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 65 "cfe.l"
+#line 64 "cfe.l"
 { return yytext[0]; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 66 "cfe.l"
+#line 65 "cfe.l"
 ECHO;
 	YY_BREAK
-#line 986 "lex.yy.c"
+#line 985 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_COMMENT):
 	yyterminate();
@@ -1988,6 +1987,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 66 "cfe.l"
+#line 65 "cfe.l"
 
 
