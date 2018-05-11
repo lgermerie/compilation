@@ -5,8 +5,8 @@
 	#include"symTable.h"
 	int yylex();
 	void yyerror(char const *s);
-	int level=0;//niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
-    extern int yylineno;
+	int level=0;            // Niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
+    extern int yylineno;    // Permet de compter les lignes, et d'indiquer où se trouve un erreur
 %}
 
 %error-verbose
@@ -25,35 +25,42 @@
 %type<id> declarateur
 
 %union {
-    int id;  /* Pour réccupérer le nom de l'identificateur */
+    char* id;  /* Pour réccupérer le nom des identificateurs */
 }
 
 %left OP
 %left REL
 %start programme
 %%
+
 programme	:
 		liste_declarations liste_fonctions
 ;
+
 liste_declarations	:
         liste_declarations declaration
 	|
 ;
+
 liste_fonctions	:
         liste_fonctions fonction
 	|   fonction
 ;
+
 declaration	:
-        type liste_declarateurs ';' {printf("declaration\n");}
+        type liste_declarateurs ';'
 ;
+
 liste_declarateurs	:
-        liste_declarateurs ',' declarateur  {printf("Id : %d\n", $3);}
-	|	declarateur
+        liste_declarateurs ',' declarateur  {printf("Déclaration de l'id : %s\n", $3);}
+	|	declarateur                         {printf("Déclaration de l'id : %s\n", $1);}
 ;
+
 declarateur	:
-        IDENTIFICATEUR                  {$$ = $1;}
-	|	declarateur '[' CONSTANTE ']'   {$$ = $1;}
+        IDENTIFICATEUR                  //{$$ = $1; /* Action par défaut… */}
+	|	declarateur '[' CONSTANTE ']'   //{$$ = $1;}
 ;
+
 fonction	:
 		type IDENTIFICATEUR '(' param_list ')' '{' liste_declarations liste_instructions '}' {level=1;//passage aux déclarations internes
 																																														///actions...
@@ -61,22 +68,27 @@ fonction	:
 	|	EXTERN type IDENTIFICATEUR '(' param_list ')' ';'
 
 ;
+
 type	:
 		VOID
 	|	INT
 ;
+
 param_list	:
 		param_list ',' param
 	|	param
 	|
 ;
+
 param	:
 		INT IDENTIFICATEUR
 ;
+
 liste_instructions :
 		liste_instructions instruction
 	|
 ;
+
 instruction	:
 		iteration
 	|	selection
@@ -85,10 +97,12 @@ instruction	:
 	|	bloc
 	|	appel
 ;
+
 iteration	:
 		FOR '(' affectation ';' condition ';' affectation ')' instruction
 	|	WHILE '(' condition ')' instruction
 ;
+
 selection	:
 		IF '(' condition ')' instruction %prec THEN
 	|	IF '(' condition ')' instruction ELSE instruction
@@ -96,24 +110,30 @@ selection	:
 	|	CASE CONSTANTE ':' instruction
 	|	DEFAULT ':' instruction
 ;
+
 saut	:
 		BREAK ';'
 	|	RETURN ';'
 	|	RETURN expression ';'
 ;
+
 affectation	:
 		variable '=' expression
 ;
+
 bloc	:
 		'{' liste_declarations liste_instructions '}'
 ;
+
 appel	:
 		IDENTIFICATEUR '(' liste_expressions ')' ';'
 ;
+
 variable	:
 		IDENTIFICATEUR
 	|	variable '[' expression ']'
 ;
+
 expression	:
 		'(' expression ')'
 	|	expression binary_op expression %prec OP
@@ -122,17 +142,20 @@ expression	:
 	|	variable
 	|	IDENTIFICATEUR '(' liste_expressions ')'
 ;
+
 liste_expressions	:
 		liste_expressions ',' expression
-	| expression
+	|   expression
 	|
 ;
+
 condition	:
 		NOT '(' condition ')'
 	|	condition binary_rel condition %prec REL
 	|	'(' condition ')'
 	|	expression binary_comp expression
 ;
+
 binary_op	:
 		PLUS
 	| MOINS
@@ -143,10 +166,12 @@ binary_op	:
 	|	BAND
 	|	BOR
 ;
+
 binary_rel	:
 		LAND
 	|	LOR
 ;
+
 binary_comp	:
 		LT
 	|	GT
@@ -155,6 +180,7 @@ binary_comp	:
 	|	EQ
 	|	NEQ
 ;
+
 %%
 
 void yyerror (char const *s) {
@@ -165,6 +191,8 @@ void yyerror (char const *s) {
 int main(void) {
 	yyparse();
 	fprintf(stdout, "alright alright alright \n");
+    
+    /* Tests table des symboles
 	char *test_global = "var1";
 	char *test_local = "var2";
 	char *test_local2 = "var3";
@@ -177,4 +205,5 @@ int main(void) {
 
 	clean_local();
 	clean_global();
+    */
 }
