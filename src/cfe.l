@@ -26,7 +26,7 @@ IS                      (u|U|l|L)*
 "void"                  {return VOID;}
 "while"                 {return WHILE;}
 
-{L}({L}|{D})*           {return IDENTIFICATEUR;}
+{L}({L}|{D})*           {yylval.id = atoi(yytext); printf("Lex : %s\n", yytext); return IDENTIFICATEUR;}
 
 <INITIAL>{
 "/*"                    {printf("FOUND COMMENT\n");
@@ -60,6 +60,7 @@ IS                      (u|U|l|L)*
 "<"                     {return LT;}
 ">"                     {return GT;}
 
-[ \t\v\n\f]             { /* A completer */ }
+[ \t\v\f]               { /* A completer */ }
+\n                      {yylineno++;}
 .                       { return yytext[0]; }
 %%

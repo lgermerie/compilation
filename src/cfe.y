@@ -6,11 +6,13 @@
 	int yylex();
 	void yyerror(char const *s);
 	int level=0;//niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
+    extern int yylineno;
 %}
 
 %error-verbose
 
-%token IDENTIFICATEUR CONSTANTE VOID INT FOR WHILE IF ELSE SWITCH CASE DEFAULT
+%token <id> IDENTIFICATEUR
+%token CONSTANTE VOID INT FOR WHILE IF ELSE SWITCH CASE DEFAULT
 %token BREAK RETURN PLUS MOINS MUL DIV LSHIFT RSHIFT BAND BOR LAND LOR LT GT
 %token GEQ LEQ EQ NEQ NOT EXTERN
 %left PLUS MOINS
@@ -20,9 +22,10 @@
 %left LAND LOR
 %nonassoc THEN
 %nonassoc ELSE
+%type<id> declarateur
 
 %union {
-    char* nom;  /* Pour réccupérer le nom de l'identificateur */
+    int id;  /* Pour réccupérer le nom de l'identificateur */
 }
 
 %left OP
@@ -33,40 +36,41 @@ programme	:
 		liste_declarations liste_fonctions
 ;
 liste_declarations	:
-		liste_declarations declaration
+        liste_declarations declaration
 	|
 ;
 liste_fonctions	:
-		liste_fonctions fonction
-	| fonction
+        liste_fonctions fonction
+	|   fonction
 ;
 declaration	:
-		type liste_declarateurs ';'
+        type liste_declarateurs ';' {printf("declaration\n");}
 ;
 liste_declarateurs	:
-		liste_declarateurs ',' declarateur
+        liste_declarateurs ',' declarateur  {printf("Id : %d\n", $3);}
 	|	declarateur
 ;
 declarateur	:
-		IDENTIFICATEUR
-	|	declarateur '[' CONSTANTE ']'
+        IDENTIFICATEUR                  {$$ = $1;}
+	|	declarateur '[' CONSTANTE ']'   {$$ = $1;}
 ;
 fonction	:
-		type IDENTIFICATEUR '(' liste_parms ')' '{' liste_declarations liste_instructions '}' {level=1;//passage aux déclarations internes
+		type IDENTIFICATEUR '(' param_list ')' '{' liste_declarations liste_instructions '}' {level=1;//passage aux déclarations internes
 																																														///actions...
 																																													level=0;}
-	|	EXTERN type IDENTIFICATEUR '(' liste_parms ')' ';'
+	|	EXTERN type IDENTIFICATEUR '(' param_list ')' ';'
+
 ;
 type	:
 		VOID
 	|	INT
 ;
-liste_parms	:
-		liste_parms ',' parm
-	|	parm
+param_list	:
+		param_list ',' param
+	|	param
 	|
 ;
-parm	:
+param	:
 		INT IDENTIFICATEUR
 ;
 liste_instructions :
@@ -154,7 +158,8 @@ binary_comp	:
 %%
 
 void yyerror (char const *s) {
-	fprintf(stderr, "syntax error : %c\n", yychar);
+	fprintf(stderr, "syntax error at %i: %c\n", yylineno, yychar);
+    exit(1);
 }
 
 int main(void) {
