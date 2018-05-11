@@ -16,6 +16,7 @@
 *.gch
 *.pch
 
+
 # Libraries
 *.lib
 *.a
@@ -56,3 +57,9 @@ dkms.conf
 
 # MacOs files
 .DS_Store
+
+# Generated yacc an lex C files
+*.tab.c
+*.tab.h
+*.yy.c
+*.output
