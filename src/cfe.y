@@ -57,7 +57,14 @@ liste_declarateurs	:
 ;
 
 declarateur	:
-        IDENTIFICATEUR                  //{$$ = $1; /* Action par défaut… */}
+        IDENTIFICATEUR                  /*{
+                                            if (level == 1) {   // Si on est dans un bloc
+                                                if (
+                                                // On test si l'identificateur est déjà enregistré
+                                            // Si oui on a une erreur
+                                            // Sinon on l'enregistre
+                                        }*/
+
 	|	declarateur '[' CONSTANTE ']'   //{$$ = $1;}
 ;
 
@@ -191,8 +198,8 @@ void yyerror (char const *s) {
 int main(void) {
 	yyparse();
 	fprintf(stdout, "alright alright alright \n");
-    
-    /* Tests table des symboles
+
+    //Tests table des symboles
 	char *test_global = "var1";
 	char *test_local = "var2";
 	char *test_local2 = "var3";
@@ -200,10 +207,19 @@ int main(void) {
 	add_global(test_global);
 	add_local(test_local);
 	add_local(test_local2);
+    symbol* res;
+    res = fetch_local("toto");
+    if (!res) {
+        printf("NULL\n");
+    }
+    else {
+        printf("Pas NULL\n");
+    }
+    //printf("fetch_local(tot) (non initialisé) : %i\n", NULL == fetch_global("tot"));
 
 	print_tables();
 
 	clean_local();
 	clean_global();
-    */
+
 }

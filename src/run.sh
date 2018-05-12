@@ -2,6 +2,7 @@
 
 bison -d -v cfe.y
 flex cfe.l
-gcc lex.yy.c cfe.tab.c -o try.out -ll
+gcc -c symTable.c lex.yy.c cfe.tab.c
+gcc symTable.o lex.yy.o cfe.tab.o -o try.out -ll
 
 ./try.out
