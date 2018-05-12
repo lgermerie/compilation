@@ -13,11 +13,11 @@ symbol *local_Vars[100];
 int max_Global = 0;
 int max_Local = 0;
 
-symbol fetch_In(char *name, symbol *table[], int max) {//symbol to fetch, table to fetch in, number of symbols in table
-  symbol res;
+symbol *fetch_In(char *name, symbol *table[], int max) {//symbol to fetch, table to fetch in, number of symbols in table
+  symbol *res;
   for (int i=0; i < max; i++) {
     if (!strcmp(table[i]->name, name)) {
-      res = *(table[i]);
+      res = table[i];
       break;
     }
   }
@@ -25,15 +25,15 @@ symbol fetch_In(char *name, symbol *table[], int max) {//symbol to fetch, table 
 }
 
 
-symbol fetch_global(char *name) {
-  symbol res = fetch_In(name, global_Vars, max_Global);
+symbol *fetch_global(char *name) {
+  symbol *res = fetch_In(name, global_Vars, max_Global);
   return res;
 }
 
 
-symbol fetch_local(char *name) {
-  symbol res = fetch_In(name, local_Vars, max_Local);
-  if (&res == NULL) {
+symbol *fetch_local(char *name) {
+  symbol *res = fetch_In(name, local_Vars, max_Local);
+  if (!res) {
     return fetch_global(name);
   }
   return res;
