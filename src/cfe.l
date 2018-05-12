@@ -26,16 +26,20 @@ IS                      (u|U|l|L)*
 "void"                  {return VOID;}
 "while"                 {return WHILE;}
 
-{L}({L}|{D})*           {return IDENTIFICATEUR;}
+{L}({L}|{D})*           {   /* Mentionner problème dans la soutenance : l'affectation yylval.id = yytext ne fonctionne pas du tout, elle inclue le caractère suivant… */
+                            yylval.id = malloc(strlen(yytext));         // On affecte au pointeur de la place, peut être faut il faire un free quelque part ?
+                            strncpy(yylval.id, yytext, strlen(yytext)); // puis on copie juste la longueur de l'identifiant reconnu
+                            return IDENTIFICATEUR;      // enfin on renvoit le token
+                        }
 
 <INITIAL>{
 "/*"                    {printf("FOUND COMMENT\n");
                         BEGIN(IN_COMMENT);}
 }
 <IN_COMMENT>{
-"*/"                    {printf("END COMMENT\n");/*mentionner dans la soutenance*/
+"*/"                    {printf("END COMMENT\n");   /*mentionner dans la soutenance*/
                         BEGIN(INITIAL);}
-[^*\n]+                  // eat comment in chunks
+[^*\n]+                 // eat comment in chunks
 "*"                     // eat the lone star
 \n                      yylineno++;
 }
@@ -60,6 +64,7 @@ IS                      (u|U|l|L)*
 "<"                     {return LT;}
 ">"                     {return GT;}
 
-[ \t\v\n\f]             { /* A completer */ }
+[ \t\v\f]               { /* Ignore */ }
+\n                      {yylineno++;}
 .                       { return yytext[0]; }
 %%
