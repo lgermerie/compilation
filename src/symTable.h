@@ -5,10 +5,8 @@ typedef struct _symbol {
  int is_init;
 } symbol;
 
-symbol *fetch_In(char *name, symbol *table[], int max);
 symbol *fetch_global(char *name);
 symbol *fetch_local(char *name);
-void add_symbol(char *name, symbol *table[], int *max);
 void add_local(char *name);
 void add_global(char *name);
 void write_value(symbol *s, int v);
