@@ -5,6 +5,7 @@
 	#include"symTable.h"
 	int yylex();
 	void yyerror(char const *s);
+	void id_error(char* id_name);
 	int level=0;            // Niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
     extern int yylineno;    // Permet de compter les lignes, et d'indiquer où se trouve un erreur
 %}
@@ -53,17 +54,30 @@ declaration	:
 
 liste_declarateurs	:
         liste_declarateurs ',' declarateur  {printf("Déclaration de l'id : %s\n", $3);}
-	|	declarateur                         {printf("Déclaration de l'id : %s\n", $1);}
+		|		declarateur                         {printf("Déclaration de l'id : %s\n", $1);}
 ;
 
 declarateur	:
-        IDENTIFICATEUR                  /*{
+        IDENTIFICATEUR                  {
                                             if (level == 1) {   // Si on est dans un bloc
-                                                if (
-                                                // On test si l'identificateur est déjà enregistré
-                                            // Si oui on a une erreur
-                                            // Sinon on l'enregistre
-                                        }*/
+
+																								if (fetch_local($1)) {	// On test si l'identificateur est déjà enregistré
+																									id_error($1);	// Si oui on a une erreur
+																								}
+																								add_local($1);	// Sinon on l'enregistre
+																						}
+
+																						else {	// On est hors d'un bloc
+
+																								if (fetch_global($1)) {
+																									id_error($1);
+																								}
+																								add_global($1);
+
+																						}
+																						$$ = $1;
+
+                                        }
 
 	|	declarateur '[' CONSTANTE ']'   //{$$ = $1;}
 ;
@@ -195,11 +209,16 @@ void yyerror (char const *s) {
   exit(1);
 }
 
+void id_error (char* id_name) {
+	fprintf(stderr, "id already declared on line %i : %s\n", yylineno, id_name);
+	exit(1);
+}
+
 int main(void) {
 	yyparse();
 	fprintf(stdout, "alright alright alright \n");
 
-	//Tests table des symboles
+	/*Tests table des symboles
 	char *test_global = "var1";
 	char *test_local = "var2";
 	char *test_local2 = "var3";
@@ -208,7 +227,7 @@ int main(void) {
 	add_local(test_local);
 	add_local(test_local2);
     symbol* res;
-    res = fetch_global("var2");
+    res = fetch_global("var1");
     if (!res) {
         printf("NULL\n");
     }
@@ -216,7 +235,7 @@ int main(void) {
         printf("Pas NULL\n");
     }
     printf("fetch_local(tot) (non initialisé) : %i\n", NULL == fetch_global("tot"));
-
+	*/
 
 	print_tables();
 

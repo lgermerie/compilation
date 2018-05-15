@@ -95,7 +95,7 @@ void print_tables() {
     }
   }
 
-  printf("Local vars : \n");
+  printf("\nLocal vars : \n");
   for (int i = 0; i < max_Local; i++) {
     printf("\t %s", local_Vars[i]->name);
     if (i%5==0) {
