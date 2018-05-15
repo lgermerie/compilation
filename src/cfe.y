@@ -192,14 +192,14 @@ binary_comp	:
 
 void yyerror (char const *s) {
 	fprintf(stderr, "syntax error at %i: %c\n", yylineno, yychar);
-    exit(1);
+  exit(1);
 }
 
 int main(void) {
 	yyparse();
 	fprintf(stdout, "alright alright alright \n");
 
-    //Tests table des symboles
+	//Tests table des symboles
 	char *test_global = "var1";
 	char *test_local = "var2";
 	char *test_local2 = "var3";
@@ -208,18 +208,18 @@ int main(void) {
 	add_local(test_local);
 	add_local(test_local2);
     symbol* res;
-    res = fetch_local("toto");
+    res = fetch_global("var2");
     if (!res) {
         printf("NULL\n");
     }
     else {
         printf("Pas NULL\n");
     }
-    //printf("fetch_local(tot) (non initialisé) : %i\n", NULL == fetch_global("tot"));
+    printf("fetch_local(tot) (non initialisé) : %i\n", NULL == fetch_global("tot"));
+
 
 	print_tables();
 
 	clean_local();
 	clean_global();
-
 }

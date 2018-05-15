@@ -11,27 +11,17 @@ int max_Global = 0;
 int max_Local = 0;
 
 symbol *fetch_In(char *name, symbol *table[], int max) { //symbol to fetch, table to fetch in, number of symbols in table
+  symbol *res = NULL;
 
-  //printf("Fetch appellée\n");
-
-  symbol *res;
   for (int i=0; i < max; i++) {
     if (!strcmp(table[i]->name, name)) {
       res = table[i];
 
-      //printf("res trouvé\n");
+      printf("res trouvé\n");
 
       break;
     }
   }
-/* Test de la comparaison avec NULL du pointeur
-  if (res == NULL) {
-    printf("Fetch : NULL\n");
-  }
-  else {
-    printf("Fetch : pas NULL\n");
-  }
-*/
   return res;
 }
 
