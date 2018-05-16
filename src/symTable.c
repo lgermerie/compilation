@@ -16,9 +16,6 @@ symbol *fetch_In(char *name, symbol *table[], int max) { //symbol to fetch, tabl
   for (int i=0; i < max; i++) {
     if (!strcmp(table[i]->name, name)) {
       res = table[i];
-
-      printf("res trouvé\n");
-
       break;
     }
   }
@@ -31,10 +28,14 @@ symbol *fetch_global(char *name) {
   return res;
 }
 
-
 symbol *fetch_local(char *name) {
   symbol *res = fetch_In(name, local_Vars, max_Local);
-  if (!res) {   // !res ??
+  return res;
+}
+
+symbol *fetch_all(char *name) {//cherche d'abord dans le local, puis dans le global
+  symbol *res = fetch_local(name);
+  if (!res) {   // si res vaut NULL
     return fetch_global(name);
   }
   return res;
@@ -90,7 +91,7 @@ void print_tables() {
   printf("Global vars : \n");
   for (int i = 0; i < max_Global; i++) {
     printf("\t %s", global_Vars[i]->name);
-    if (i%5==0) {
+    if ((i+1)%5==0) {
       printf("\n");
     }
   }
@@ -98,7 +99,7 @@ void print_tables() {
   printf("\nLocal vars : \n");
   for (int i = 0; i < max_Local; i++) {
     printf("\t %s", local_Vars[i]->name);
-    if (i%5==0) {
+    if ((i+1)%5==0) {
       printf("\n");
     }
   }

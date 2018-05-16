@@ -7,6 +7,7 @@ typedef struct _symbol {
 
 symbol *fetch_global(char *name);
 symbol *fetch_local(char *name);
+symbol *fetch_all(char *name);
 void add_local(char *name);
 void add_global(char *name);
 void write_value(symbol *s, int v);

@@ -7,7 +7,7 @@
 	void yyerror(char const *s);
 	void id_error(char* id_name);
 	int level=0;            // Niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
-    extern int yylineno;    // Permet de compter les lignes, et d'indiquer où se trouve un erreur
+  extern int yylineno;    // Permet de compter les lignes, et d'indiquer où se trouve un erreur
 %}
 
 %error-verbose
@@ -35,7 +35,7 @@
 %%
 
 programme	:
-		liste_declarations liste_fonctions
+		liste_declarations liste_fonctions {}
 ;
 
 liste_declarations	:
@@ -44,8 +44,10 @@ liste_declarations	:
 ;
 
 liste_fonctions	:
-        liste_fonctions fonction
-	|   fonction
+      liste_fonctions fonction						{	print_tables();
+																						clean_local();}
+	|   fonction														{	print_tables();
+																						clean_local();}
 ;
 
 declaration	:
@@ -53,39 +55,43 @@ declaration	:
 ;
 
 liste_declarateurs	:
-        liste_declarateurs ',' declarateur  {printf("Déclaration de l'id : %s\n", $3);}
-		|		declarateur                         {printf("Déclaration de l'id : %s\n", $1);}
+        liste_declarateurs ',' declarateur  {printf("Déclaration de l'id : %s \t indic : %d\n", $3, level);}
+		|		declarateur                         {printf("Déclaration de l'id : %s \t indic : %d\n", $1, level);}
 ;
 
 declarateur	:
         IDENTIFICATEUR                  {
-                                            if (level == 1) {   // Si on est dans un bloc
-
+                                            if (level==1) {   // Si on est dans un bloc
 																								if (fetch_local($1)) {	// On test si l'identificateur est déjà enregistré
+																									printf("local error \n");
+																									print_tables();
 																									id_error($1);	// Si oui on a une erreur
 																								}
 																								add_local($1);	// Sinon on l'enregistre
 																						}
 
 																						else {	// On est hors d'un bloc
-
 																								if (fetch_global($1)) {
+																									printf("global error \n");
+																									print_tables();
 																									id_error($1);
 																								}
 																								add_global($1);
-
 																						}
 																						$$ = $1;
-
                                         }
 
 	|	declarateur '[' CONSTANTE ']'   //{$$ = $1;}
 ;
 
 fonction	:
-		type IDENTIFICATEUR '(' param_list ')' '{' liste_declarations liste_instructions '}' {level=1;//passage aux déclarations internes
-																																														///actions...
-																																													level=0;}
+		type IDENTIFICATEUR '(' param_list ')' '{' liste_declarations liste_instructions '}' {if (fetch_global($2)) {
+																																														printf("global error \n");
+																																														print_tables();
+																																														id_error($2);
+																																														}
+																																													add_global($2);
+																																												}
 	|	EXTERN type IDENTIFICATEUR '(' param_list ')' ';'
 
 ;
@@ -96,9 +102,9 @@ type	:
 ;
 
 param_list	:
-		param_list ',' param
-	|	param
-	|
+		param_list ',' param 									{level=1;}
+	|	param 																{level=1;}
+	| 																			{level=1;}
 ;
 
 param	:
@@ -115,7 +121,7 @@ instruction	:
 	|	selection
 	|	saut
 	|	affectation ';'
-	|	bloc
+	|	bloc	
 	|	appel
 ;
 
@@ -217,25 +223,6 @@ void id_error (char* id_name) {
 int main(void) {
 	yyparse();
 	fprintf(stdout, "alright alright alright \n");
-
-	/*Tests table des symboles
-	char *test_global = "var1";
-	char *test_local = "var2";
-	char *test_local2 = "var3";
-
-	add_global(test_global);
-	add_local(test_local);
-	add_local(test_local2);
-    symbol* res;
-    res = fetch_global("var1");
-    if (!res) {
-        printf("NULL\n");
-    }
-    else {
-        printf("Pas NULL\n");
-    }
-    printf("fetch_local(tot) (non initialisé) : %i\n", NULL == fetch_global("tot"));
-	*/
 
 	print_tables();
 
