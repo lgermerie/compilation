@@ -55,8 +55,8 @@ declaration	:
 ;
 
 liste_declarateurs	:
-        liste_declarateurs ',' declarateur  {printf("Déclaration de l'id : %s \t indic : %d\n", $3, level);}
-		|		declarateur                         {printf("Déclaration de l'id : %s \t indic : %d\n", $1, level);}
+        liste_declarateurs ',' declarateur  {printf("Déclaration de l'id : %s \t niveau : %d\n", $3, level);}
+		|		declarateur                         {printf("Déclaration de l'id : %s \t niveau : %d\n", $1, level);}
 ;
 
 declarateur	:
@@ -90,6 +90,7 @@ fonction	:
 																																														print_tables();
 																																														id_error($2);
 																																														}
+																																													printf("Id fonction : %s\n", $2);
 																																													add_global($2);
 																																												}
 	|	EXTERN type IDENTIFICATEUR '(' param_list ')' ';'
@@ -121,7 +122,7 @@ instruction	:
 	|	selection
 	|	saut
 	|	affectation ';'
-	|	bloc	
+	|	bloc
 	|	appel
 ;
 
