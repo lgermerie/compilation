@@ -6,6 +6,7 @@
 	int yylex();
 	void yyerror(char const *s);
 	void id_error(char* id_name);
+	void undefined_id_error(char *id_name);
 	int level=0;            // Niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
   extern int yylineno;    // Permet de compter les lignes, et d'indiquer où se trouve un erreur
 %}
@@ -121,7 +122,7 @@ instruction	:
 	|	selection
 	|	saut
 	|	affectation ';'
-	|	bloc	
+	|	bloc
 	|	appel
 ;
 
@@ -157,7 +158,16 @@ appel	:
 ;
 
 variable	:
-		IDENTIFICATEUR
+		IDENTIFICATEUR											 {	if (level==1) {
+																							if (!fetch_all) {
+																								undefined_id_error($1);
+																							}
+																						} else {
+																							if (!fetch_global) {
+																								undefined_id_error($1);
+																							}
+																						}
+																					}
 	|	variable '[' expression ']'
 ;
 
@@ -217,6 +227,11 @@ void yyerror (char const *s) {
 
 void id_error (char* id_name) {
 	fprintf(stderr, "id already declared on line %i : %s\n", yylineno, id_name);
+	exit(1);
+}
+
+void undefined_id_error(char *id_name) {
+	fprintf(stderr, "undefined id on line %i : %s\n", yylineno, id_name);
 	exit(1);
 }
 

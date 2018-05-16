@@ -9,7 +9,7 @@ int main() {
 }
 
 int dick() {
-  int a;
   a=2;
+  b=1;
   return a;
 }
