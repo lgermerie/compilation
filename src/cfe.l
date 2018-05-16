@@ -27,8 +27,10 @@ IS                      (u|U|l|L)*
 "while"                 {return WHILE;}
 
 {L}({L}|{D})*           {   /* Mentionner problème dans la soutenance : l'affectation yylval.id = yytext ne fonctionne pas du tout, elle inclue le caractère suivant… */
-                            yylval.id = malloc(strlen(yytext));         // On affecte au pointeur de la place, peut être faut il faire un free quelque part ?
+                            yylval.id = malloc(strlen(yytext) + 1);         // On affecte au pointeur de la place, peut être faut il faire un free quelque part ?
+                            memset(yylval.id, '\0', strlen(yytext) + 1);
                             strncpy(yylval.id, yytext, strlen(yytext)); // puis on copie juste la longueur de l'identifiant reconnu
+                            printf("Lex : %s\n", yylval.id);
                             return IDENTIFICATEUR;      // enfin on renvoit le token
                         }
 
