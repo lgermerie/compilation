@@ -2,6 +2,7 @@
 	#include<stdio.h>
 	#include<stdlib.h>
 	#include<string.h>
+	#include "utils.c"
 	#include"symTable.h"
 	int yylex();
 	void yyerror(char const *s);
@@ -28,6 +29,7 @@
 
 %union {
     char* id;  /* Pour réccupérer le nom des identificateurs */
+		char* code;
 }
 
 %left OP
@@ -36,18 +38,20 @@
 %%
 
 programme	:
-		liste_declarations liste_fonctions {}
+		liste_declarations liste_fonctions 	{	$$.code = concat($1.code, $2.code);}
 ;
 
 liste_declarations	:
-        liste_declarations declaration
-	|
+        liste_declarations declaration 	{	$$.code = concat($1.code, $2.code);}
+	|																			{	char* empty = "";
+																					$$.code = empty;}
 ;
 
 liste_fonctions	:
-      liste_fonctions fonction						{	print_tables();
+      liste_fonctions fonction						{	
+																						//print_tables();
 																						clean_local();}
-	|   fonction														{	print_tables();
+	|   fonction														{	//print_tables();
 																						clean_local();}
 ;
 
