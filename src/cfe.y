@@ -48,20 +48,27 @@ liste_declarations	:
 ;
 
 liste_fonctions	:
-      liste_fonctions fonction						{	
+      liste_fonctions fonction						{	$$.code = concat($1.code, $2.code);
 																						//print_tables();
 																						clean_local();}
-	|   fonction														{	//print_tables();
+	|   fonction														{	$$.code = $1.code;
+																						//print_tables();
 																						clean_local();}
 ;
 
 declaration	:
-        type liste_declarateurs ';'
+        type liste_declarateurs ';'				{	char* temp_code = concat($1.code, $2.code);
+																						char* end = ";";
+																						$$.code = concat(temp_code, end);}
 ;
 
 liste_declarateurs	:
-        liste_declarateurs ',' declarateur  {printf("Déclaration de l'id : %s \t indic : %d\n", $3, level);}
-		|		declarateur                         {printf("Déclaration de l'id : %s \t indic : %d\n", $1, level);}
+        liste_declarateurs ',' declarateur  { char* coma = ", ";
+																							char* temp = concat($1.code, coma);
+																							$$.code = concat(temp, $2.code);}
+																							//printf("Déclaration de l'id : %s \t indic : %d\n", $3.id, level);}
+		|		declarateur                         {	$$.code = $1.code;}
+																							//printf("Déclaration de l'id : %s \t indic : %d\n", $1.id, level);}
 ;
 
 declarateur	:
@@ -83,10 +90,10 @@ declarateur	:
 																								}
 																								add_global($1);
 																						}
-																						$$ = $1;
+																						$$.id = $1;
                                         }
 
-	|	declarateur '[' CONSTANTE ']'   //{$$ = $1;}
+	|	declarateur '[' CONSTANTE ']'   //{$$.id = $1;}
 ;
 
 fonction	:
