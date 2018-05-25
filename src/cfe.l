@@ -30,23 +30,23 @@ IS                      (u|U|l|L)*
                             yylval.id = malloc(strlen(yytext) + 1);         // On affecte au pointeur de la place, peut être faut il faire un free quelque part ?
                             memset(yylval.id, '\0', strlen(yytext) + 1);
                             strncpy(yylval.id, yytext, strlen(yytext)); // puis on copie juste la longueur de l'identifiant reconnu
-                            printf("Lex : %s\n", yylval.id);
+                            //printf("Lex : %s\n", yylval.id);
                             return IDENTIFICATEUR;      // enfin on renvoit le token
                         }
 
 <INITIAL>{
-"/*"                    {printf("FOUND COMMENT\n");
+"/*"                    {//printf("FOUND COMMENT\n");
                         BEGIN(IN_COMMENT);}
 }
 <IN_COMMENT>{
-"*/"                    {printf("END COMMENT\n");   /*mentionner dans la soutenance*/
+"*/"                    {/*printf("END COMMENT\n");   mentionner dans la soutenance*/
                         BEGIN(INITIAL);}
 [^*\n]+                 // eat comment in chunks
 "*"                     // eat the lone star
 \n                      yylineno++;
 }
 
-{D}+                    {yylval.valeur = atoi(yylex); printf("Constante : %s \n", yylval.valeur); return CONSTANTE;}
+{D}+                    {yylval.valeur = atoi(yytext); printf("Constante : %i \n", yylval.valeur); return CONSTANTE;}
 
 ">>"                    {return RSHIFT;}
 "<<"                    {return LSHIFT;}
