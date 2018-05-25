@@ -46,7 +46,8 @@ IS                      (u|U|l|L)*
 \n                      yylineno++;
 }
 
-{D}+                    {yylval.valeur = atoi(yytext); printf("Constante : %i \n", yylval.valeur); return CONSTANTE;}
+{D}+                    {yylval.valeur = atoi(yytext); /*printf("Constante : %i \n", yylval.valeur); */
+                         return CONSTANTE;}
 
 ">>"                    {return RSHIFT;}
 "<<"                    {return LSHIFT;}

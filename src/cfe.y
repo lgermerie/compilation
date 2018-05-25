@@ -10,6 +10,18 @@
 	void undefined_id_error(char *id_name);
 	int level=0;            // Niveau de déclaration de variables pour la table des symboles -- 0 -> global, 1 -> local
   extern int yylineno;    // Permet de compter les lignes, et d'indiquer où se trouve un erreur
+	char* semicolon = ";";
+	char* semicolon_newline = ";\n";
+	char* coma = ",";
+	char* lpar = "(";
+	char* rpar = ")";
+	char* lbrace = "{";
+	char* rbrace = "}\n";
+	char* lbracket = "[";
+	char* rbracket = "]";
+	char* colon = ":";
+	char* equal = "=";
+	char* newline = "\n";
 %}
 
 %error-verbose
@@ -56,9 +68,8 @@ programme	:
 liste_declarations	:
         liste_declarations declaration 	{
 																					$$ = concat($1, $2);
-																					/*free($1); Je ne pense pas qu'il faille gérer la mémoire pour yacc, les $X font référence à des champs de structs un peu comlexes...
-																					free($2);*/
-																					printf("Liste déclarations, $1 : %s\t$2 : %s\t$$ : %s\n", $1, $2, $$);
+																					free($1);
+																					free($2);
 																				}
 	|																			{	$$ = calloc(1, sizeof(char));} //chaine vide pour pouvoir utiliser free
 ;
@@ -77,27 +88,24 @@ liste_fonctions	:
 
 declaration	:
         type liste_declarateurs ';'				{	char* temp_code = concat($1, $2);
-																						$$ = concat(temp_code, ";");
+																						$$ = concat(temp_code, semicolon_newline);
 																						/*free($1);
 																						free($2);*/
 																						free(temp_code);
-																						printf("----> Déclaration : %s \n", $$);
+																						//printf("----> Déclaration : %s \n", $$);
 																					}
 ;
 
 liste_declarateurs	:
-        liste_declarateurs ',' declarateur  { printf("Liste déclarateur, $1 : %s, \t $2 : %s,\t $3 : %s\n", $1, $2, $3);
-																							char* temp = concat($1, ",");
+        liste_declarateurs ',' declarateur  { char* temp = concat($1, coma);
 																							$$ = concat(temp, $3);
-																							printf("temp : %s,\t $$ : %s\n", temp, $$);
-																							/*free($1);
-																							free($3);*/
-																							free(temp);
-																							printf("Liste déclarateurs $$ : %s\n", $$);}
-		|		declarateur                         {	//char* empty = calloc(1, sizeof(char));
-																							$$ = $1;
-																							//free(empty);
-																							printf("Liste déclarateur unique id : %s \t niveau : %d\t $$ : %s\n", $1, level, $$);}
+																							free($1);
+																							free($3);
+																							free(temp);}
+		|		declarateur                         {	char* empty = calloc(1, sizeof(char));
+																							$$ = concat($1, empty);
+																							free($1);
+																							free(empty);}
 ;
 
 declarateur	:
@@ -119,17 +127,18 @@ declarateur	:
 																								}
 																								add_global($1);
 																						}
-																						$$ = $1;
-																						printf("Déclarateur $$ : %s\n", $$);
-																						/*char* empty = calloc(1, sizeof(char));
+																						//$$ = $1;
+																						//printf("Déclarateur $$ : %s\n", $$);
+																						char* empty = calloc(1, sizeof(char));
 																						$$ = concat($1, empty);
-																						free(empty);*/
+																						free(empty);
+																						free($1);
                                         }
 
-	|	declarateur '[' CONSTANTE ']'				{ char* temp1 = concat($1, $2);
+	|	declarateur '[' CONSTANTE ']'				{ char* temp1 = concat($1, lbracket);
 																					char* cste = "CONSTANTE";
 																					char* temp2 = concat(temp1, cste);
-																					$$ = concat(temp2, $4);
+																					$$ = concat(temp2, rbracket);
 																					free(temp1);
 																					free(temp2);}
 ;
@@ -141,16 +150,16 @@ fonction	:
 																																														}
 																																													add_global($2);
 																																													char* temp1 = concat($1, $2);
-																																													char* temp2 = concat(temp1, $3);
+																																													char* temp2 = concat(temp1, lpar);
 																																													char* temp3 = concat(temp2, $4);
-																																													char* temp4 = concat(temp3, $5);
-																																													char* temp5 = concat(temp4, $6);
+																																													char* temp4 = concat(temp3, rpar);
+																																													char* temp5 = concat(temp4, lbrace);
 																																													char* newline = "\n";
 																																													char* temp6 = concat(temp5, newline);
 																																													char* temp7 = concat(temp6, $7);
 																																													char* temp8 = concat(temp7, $8);
 																																													char* temp9 = concat(temp8, newline);
-																																													$$ = concat(temp9, $9);
+																																													$$ = concat(temp8, rbrace);
 																																													free($1);
 																																													free($4);
 																																													free($7);
@@ -168,10 +177,10 @@ fonction	:
 	|	EXTERN type IDENTIFICATEUR '(' param_list ')' ';' 	{	char* ext = "extern ";
 																													char* temp1 = concat(ext, $2);
 																													char* temp2 = concat(temp1, $3);
-																													char* temp3 = concat(temp2, $4);
+																													char* temp3 = concat(temp2, lpar);
 																													char* temp4 = concat(temp3, $5);
-																													char* temp5 = concat(temp4, $6);
-																													$$ = concat(temp5, $7);
+																													char* temp5 = concat(temp4, rpar);
+																													$$ = concat(temp5, semicolon_newline);
 																													free($2);
 																													free($5);
 																													free(temp1);
@@ -195,7 +204,7 @@ type	:
 
 param_list	:
 		param_list ',' param 																{	level=1;
-																													char* temp1 = concat($1, $2);
+																													char* temp1 = concat($1, coma);
 																													$$ = concat(temp1, $3);
 																													free($1);
 																													free($3);}
@@ -232,7 +241,7 @@ instruction	:
 																													$$ = concat($1, empty);
 																													free(empty);
 																													free($1);}
-	|	affectation ';'																			{ $$ = concat($1, $2);
+	|	affectation ';'																			{ $$ = concat($1, semicolon_newline);
 																													free($1);}
 	|	bloc																								{ char* empty = calloc(1, sizeof(char));
 																													$$ = concat($1, empty);
@@ -247,11 +256,11 @@ instruction	:
 iteration	:
 		FOR '(' affectation ';' condition ';' affectation ')' instruction			{	char* for_loop = "for(";
 																																						char* temp1 = concat(for_loop, $3);
-																																						char* temp2 = concat(temp1, $4);
+																																						char* temp2 = concat(temp1, semicolon);
 																																						char* temp3 = concat(temp2, $5);
-																																						char* temp4 = concat(temp3, $6);
+																																						char* temp4 = concat(temp3, semicolon);
 																																						char* temp5 = concat(temp4, $7);
-																																						char* temp6 = concat(temp5, $8);
+																																						char* temp6 = concat(temp5, rpar);
 																																						$$ = concat(temp6, $9);
 																																						free($3);
 																																						free($5);
@@ -265,7 +274,7 @@ iteration	:
 																																						free(temp6);}
 	|	WHILE '(' condition ')' instruction																		{	char* while_loop = "while(";
 																																						char* temp1 = concat(while_loop, $3);
-																																						char* temp2 = concat(temp1, $4);
+																																						char* temp2 = concat(temp1, rpar);
 																																						$$ = concat(temp2, $5);
 																																						free($3);
 																																						free($5);
@@ -276,7 +285,7 @@ iteration	:
 selection	:
 		IF '(' condition ')' instruction %prec THEN														{	char* cond = "if(";
 																																						char* temp1 = concat(cond, $3);
-																																						char* temp2 = concat(temp1, $4);
+																																						char* temp2 = concat(temp1, rpar);
 																																						$$ = concat(temp2, $5);
 																																						free($3);
 																																						free($5);
@@ -284,7 +293,7 @@ selection	:
 																																						free(temp2);}
 	|	IF '(' condition ')' instruction ELSE instruction											{	char* cond = "if(";
 																																						char* temp1 = concat(cond, $3);
-																																						char* temp2 = concat(temp1, $4);
+																																						char* temp2 = concat(temp1, rpar);
 																																						char* temp3 = concat(temp2, $5);
 																																						char* else_kw = " else ";
 																																						char* temp4 = concat(temp3, else_kw);
@@ -298,7 +307,7 @@ selection	:
 																																						free(temp4);}
 	|	SWITCH '(' expression ')' instruction																	{	char* switch_kw = "switch(";
 																																						char* temp1 = concat(switch_kw, $3);
-																																						char* temp2 = concat(temp1, $4);
+																																						char* temp2 = concat(temp1, rpar);
 																																						$$ = concat(temp2, $5);
 																																						free($3);
 																																						free($5);
@@ -307,7 +316,7 @@ selection	:
 	|	CASE CONSTANTE ':' instruction																				{ char* case_kw = "case ";
 																																						char* cste = "CONSTANTE ";
 																																						char* temp1 = concat(case_kw, cste);
-																																						char* temp2 = concat(temp1, $3);
+																																						char* temp2 = concat(temp1, colon);
 																																						$$ = concat(temp2, $4);
 																																						free($4);
 																																						free(temp1);
@@ -318,20 +327,20 @@ selection	:
 ;
 
 saut	:
-		BREAK ';'																															{ char* break_kw = "break;";
+		BREAK ';'																															{ char* break_kw = "break;\n";
 																																						char* empty = "";
 																																						$$ = concat(break_kw, empty);}
-	|	RETURN ';'																														{ char* return_kw = "return;";
+	|	RETURN ';'																														{ char* return_kw = "return;\n";
 																																						char* empty = "";
 																																						$$ = concat(return_kw, empty);}
 	|	RETURN expression ';'																									{	char* return_kw = "return ";
 																																						char* temp1 = concat(return_kw, $2);
-																																						$$ = concat(temp1, $3);
+																																						$$ = concat(temp1, semicolon_newline);
 																																						free($2);}
 ;
 
 affectation	:
-		variable '=' expression																								{	char* temp1 = concat($1, $2);
+		variable '=' expression																								{	char* temp1 = concat($1, equal);
 																																						$$ = concat(temp1, $3);
 																																						free($1);
 																																						free($3);
@@ -342,7 +351,7 @@ bloc	:
 		'{' liste_declarations liste_instructions '}'													{	char* begin_block = "{\n";
 																																						char* temp1 = concat(begin_block, $2);
 																																						char* temp2 = concat(temp1, $3);
-																																						$$ = concat(temp2, $4);
+																																						$$ = concat(temp2, rbrace);
 																																						free($2);
 																																						free($3);
 																																						free(temp1);
@@ -351,9 +360,9 @@ bloc	:
 ;
 
 appel	:
-		IDENTIFICATEUR '(' liste_expressions ')' ';'													{	char* temp1 = concat($1, $2);
+		IDENTIFICATEUR '(' liste_expressions ')' ';'													{	char* temp1 = concat($1, lpar);
 																																						char* temp2 = concat(temp1, $3);
-																																						char* end = ");";
+																																						char* end = ");\n";
 																																						$$ = concat(temp2, end);
 																																						free($3);
 																																						free(temp1);
@@ -366,9 +375,9 @@ variable	:
 																																						$$ = concat($1, empty);
 																																						free(empty);
 																																					}
-	|	variable '[' expression ']'																						{	char* temp1 = concat($1, $2);
+	|	variable '[' expression ']'																						{	char* temp1 = concat($1, lbracket);
 																																						char* temp2 = concat(temp1, $3);
-																																						$$ = concat(temp2, $4);
+																																						$$ = concat(temp2, rbracket);
 																																						free($1);
 																																						free($3);
 																																						free(temp1);
@@ -376,8 +385,8 @@ variable	:
 ;
 
 expression	:
-		'(' expression ')'																										{	char* temp1 = concat($1, $2);
-																																						$$ = concat(temp1, $3);
+		'(' expression ')'																										{	char* temp1 = concat(lpar, $2);
+																																						$$ = concat(temp1, rpar);
 																																						free($2);}
 	|	expression binary_op expression %prec OP															{	char* temp1 = concat($1, $2);
 																																						$$ = concat(temp1, $3);
@@ -392,14 +401,14 @@ expression	:
 																																						char* empty = "";
 																																						$$ = concat(cste, empty);}
 	|	variable																															{ $$ = $1;}
-	|	IDENTIFICATEUR '(' liste_expressions ')'															{ char* temp1 = concat($1, $2);
+	|	IDENTIFICATEUR '(' liste_expressions ')'															{ char* temp1 = concat($1, lpar);
 																																						char* temp2 = concat(temp1, $3);
-																																						$$ = concat(temp2, $4);
+																																						$$ = concat(temp2, rpar);
 																																						free($3);}
 ;
 
 liste_expressions	:
-		liste_expressions ',' expression																			{ char* temp1 = concat($1, $2);
+		liste_expressions ',' expression																			{ char* temp1 = concat($1, coma);
 																																						$$ = concat(temp1, $3);
 																																						free($1);
 																																						free($3);}
@@ -410,7 +419,7 @@ liste_expressions	:
 condition	:
 		NOT '(' condition ')'																									{	char* not = "!(";
 																																						char* temp1 = concat(not, $3);
-																																						$$ = concat(temp1, $4);
+																																						$$ = concat(temp1, rpar);
 																																						free($3);
 																																						free(temp1);}
 	|	condition binary_rel condition %prec REL															{	char* temp1 = concat($1, $2);
@@ -419,8 +428,8 @@ condition	:
 																																						free($2);
 																																						free($3);
 																																						free(temp1);}
-	|	'(' condition ')'																											{	char* temp1 = concat($1, $2);
-																																						$$ = concat(temp1, $3);
+	|	'(' condition ')'																											{	char* temp1 = concat(lpar, $2);
+																																						$$ = concat(temp1, rpar);
 																																						free($2);
 																																						free(temp1);}
 	|	expression binary_comp expression																			{	char* temp1 = concat($1, $2);
@@ -507,9 +516,9 @@ void undefined_id_error(char *id_name) {
 
 int main(void) {
 	yyparse();
-	fprintf(stdout, "alright alright alright \n");
+	fprintf(stdout, "\n\n---------------------------\n\nalright alright alright \n");
 
-	print_tables();
+	//print_tables();
 
 	clean_local();
 	clean_global();
