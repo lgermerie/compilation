@@ -77,20 +77,19 @@ liste_declarations	:
 liste_fonctions	:
       liste_fonctions fonction						{	$$ = concat($1, $2);
 																						free($1);
-																						free($2);
-																						clean_local();}
+																						free($2);}
 	|   fonction														{	char* empty = calloc(1, sizeof(char));
 																						$$ = concat($1, empty);
 																						free(empty);
 																						//print_tables();
-																						clean_local();}
+																					}
 ;
 
 declaration	:
         type liste_declarateurs ';'				{	char* temp_code = concat($1, $2);
 																						$$ = concat(temp_code, semicolon_newline);
-																						/*free($1);
-																						free($2);*/
+																						free($1);
+																						free($2);
 																						free(temp_code);
 																						//printf("----> Déclaration : %s \n", $$);
 																					}
@@ -144,7 +143,8 @@ declarateur	:
 ;
 
 fonction	:
-		type IDENTIFICATEUR '(' param_list ')' '{' liste_declarations liste_instructions '}' {if (fetch_global($2)) {
+		type IDENTIFICATEUR '(' param_list ')' '{' liste_declarations liste_instructions '}' {	clean_local();
+																																														if (fetch_global($2)) {
 																																														print_tables();
 																																														id_error($2);
 																																														}
@@ -174,7 +174,13 @@ fonction	:
 																																													free(temp8);
 																																													free(temp9);
 																																												}
-	|	EXTERN type IDENTIFICATEUR '(' param_list ')' ';' 	{	char* ext = "extern ";
+	|	EXTERN type IDENTIFICATEUR '(' param_list ')' ';' 	{	if (fetch_global($3)) {
+																														printf("global error \n");
+																														print_tables();
+																														id_error($3);
+																													}
+																													add_global($3);
+																													char* ext = "extern ";
 																													char* temp1 = concat(ext, $2);
 																													char* temp2 = concat(temp1, $3);
 																													char* temp3 = concat(temp2, lpar);
@@ -187,7 +193,9 @@ fonction	:
 																													free(temp2);
 																													free(temp3);
 																													free(temp4);
-																													free(temp5);}
+																													free(temp5);
+																													clean_local();//on nettoie les variables locales introduites par param_list
+																												}
 
 ;
 
@@ -218,7 +226,14 @@ param_list	:
 
 param	:
 		INT IDENTIFICATEUR																	{	char* type_int = "int ";
-																													$$ = concat(type_int, $2);}
+																													if (fetch_local($2)) {	// On test si l'identificateur est déjà enregistré
+																														printf("local error \n");
+																														print_tables();
+																														id_error($2);	// Si oui on a une erreur
+																													}
+																													add_local($2);	// Sinon on l'enregistre
+																													$$ = concat(type_int, $2);
+																													free($2);}
 ;
 
 liste_instructions :
@@ -370,7 +385,7 @@ appel	:
 ;
 
 variable	:
-		IDENTIFICATEUR											 																	{	if (!fetch_all($1)) { undefined_id_error($1);}
+		IDENTIFICATEUR											 																	{	if (!fetch_all($1)) { printf("failed to fetch %s",$1); print_tables(); undefined_id_error($1);}
 																																						char* empty = calloc(1, sizeof(char));
 																																						$$ = concat($1, empty);
 																																						free(empty);
