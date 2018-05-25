@@ -342,7 +342,7 @@ selection	:
 																																						free(temp1);
 																																						free(temp2);}
 	|	CASE CONSTANTE ':' instruction																				{ char* case_kw = "case ";
-																																						char* cste = "CONSTANTE ";
+																																						char* cste = int_to_str($2);
 																																						char* temp1 = concat(case_kw, cste);
 																																						char* temp2 = concat(temp1, colon);
 																																						$$ = concat(temp2, $4);
@@ -425,7 +425,7 @@ expression	:
 	|	MOINS expression																											{	char* moins = "-";
 																																						$$ = concat(moins, $2);
 																																						free($2);}
-	|	CONSTANTE																															{ char* cste = "CONSTANTE";
+	|	CONSTANTE																															{ char* cste = int_to_str($1);
 																																						char* empty = "";
 																																						$$ = concat(cste, empty);}
 	|	variable																															{ $$ = $1;}
