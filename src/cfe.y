@@ -25,13 +25,16 @@
 %left LAND LOR
 %nonassoc THEN
 %nonassoc ELSE
+
 %type<id> declarateur
+
 %type<code> programme liste_declarations liste_fonctions declaration
 %type<code> liste_declarateurs fonction type param_list param
 %type<code> liste_instructions instruction iteration selection saut affectation
 %type<code> bloc appel variable expression liste_expressions condition
 %type<code> binary_op binary_rel binary_comp
 %type<code> ';' ',' '(' ')' '{' '}' '[' ']' ':' '='
+
 %union {
     char* id;  /* Pour réccupérer le nom des identificateurs */
 		int valeur;
@@ -51,10 +54,13 @@ programme	:
 ;
 
 liste_declarations	:
-        liste_declarations declaration 	{	$$ = concat($1, $2);
-																					free($1);
-																					free($2);}
-	|																			{	$$ = calloc(1, sizeof(char));}//chaine vide pour pouvoir utiliser free
+        liste_declarations declaration 	{
+																					$$ = concat($1, $2);
+																					/*free($1); Je ne pense pas qu'il faille gérer la mémoire pour yacc, les $X font référence à des champs de structs un peu comlexes...
+																					free($2);*/
+																					printf("Liste déclarations, $1 : %s\t$2 : %s\t$$ : %s\n", $1, $2, $$);
+																				}
+	|																			{	$$ = calloc(1, sizeof(char));} //chaine vide pour pouvoir utiliser free
 ;
 
 liste_fonctions	:
@@ -70,24 +76,28 @@ liste_fonctions	:
 ;
 
 declaration	:
-        type liste_declarateurs ';'					{	char* temp_code = concat($1, $2);
-																						$$ = concat(temp_code, $3);
-																						free($1);
-																						free($2);
-																						free(temp_code);}
+        type liste_declarateurs ';'				{	char* temp_code = concat($1, $2);
+																						$$ = concat(temp_code, ";");
+																						/*free($1);
+																						free($2);*/
+																						free(temp_code);
+																						printf("----> Déclaration : %s \n", $$);
+																					}
 ;
 
 liste_declarateurs	:
-        liste_declarateurs ',' declarateur  { char* temp = concat($1, $2);
+        liste_declarateurs ',' declarateur  { printf("Liste déclarateur, $1 : %s, \t $2 : %s,\t $3 : %s\n", $1, $2, $3);
+																							char* temp = concat($1, ",");
 																							$$ = concat(temp, $3);
-																							free($1);
-																							free($3);
-																							free(temp);}
-																							//printf("Déclaration de l'id : %s \t indic : %d\n", $3.id, level);}
-		|		declarateur                         {	char* empty = calloc(1, sizeof(char));
-																							$$ = concat($1, empty);
-																							free(empty);}
-																							//printf("Déclaration de l'id : %s \t indic : %d\n", $1.id, level);}
+																							printf("temp : %s,\t $$ : %s\n", temp, $$);
+																							/*free($1);
+																							free($3);*/
+																							free(temp);
+																							printf("Liste déclarateurs $$ : %s\n", $$);}
+		|		declarateur                         {	//char* empty = calloc(1, sizeof(char));
+																							$$ = $1;
+																							//free(empty);
+																							printf("Liste déclarateur unique id : %s \t niveau : %d\t $$ : %s\n", $1, level, $$);}
 ;
 
 declarateur	:
@@ -109,10 +119,11 @@ declarateur	:
 																								}
 																								add_global($1);
 																						}
-																						//$$.id = $1;
-																						char* empty = calloc(1, sizeof(char));
+																						$$ = $1;
+																						printf("Déclarateur $$ : %s\n", $$);
+																						/*char* empty = calloc(1, sizeof(char));
 																						$$ = concat($1, empty);
-																						free(empty);
+																						free(empty);*/
                                         }
 
 	|	declarateur '[' CONSTANTE ']'				{ char* temp1 = concat($1, $2);
