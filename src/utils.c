@@ -15,6 +15,4 @@ char* concat(char* s1, char* s2) {
   strncat(res, s2, strlen(s2));
 
   return res;
-
-
 }
