@@ -2,8 +2,8 @@
 	#include<stdio.h>
 	#include<stdlib.h>
 	#include<string.h>
-	#include "utils.c"
 	#include"symTable.h"
+	#include "utils.c"
 	int yylex();
 	void yyerror(char const *s);
 	void id_error(char* id_name);
@@ -38,19 +38,28 @@
 %nonassoc THEN
 %nonassoc ELSE
 
-%type<id> declarateur
-
 %type<code> programme liste_declarations liste_fonctions declaration
 %type<code> liste_declarateurs fonction type param_list param
 %type<code> liste_instructions instruction iteration selection saut affectation
 %type<code> bloc appel variable expression liste_expressions condition
 %type<code> binary_op binary_rel binary_comp
 %type<code> ';' ',' '(' ')' '{' '}' '[' ']' ':' '='
+%type<valeur> CONSTANTE
+%type<var> declarateur
+
+%code requires {
+	typedef	struct New_Var {
+	  char* name;
+	  char* code;
+	  int size;
+	} new_var;
+}
 
 %union {
     char* id;  /* Pour réccupérer le nom des identificateurs */
 		int valeur;
 		char* code;
+		new_var var;
 }
 
 %left OP
@@ -97,13 +106,13 @@ declaration	:
 
 liste_declarateurs	:
         liste_declarateurs ',' declarateur  { char* temp = concat($1, coma);
-																							$$ = concat(temp, $3);
+																							$$ = concat(temp, $3.code);
 																							free($1);
-																							free($3);
+																							free($3.code);
 																							free(temp);}
 		|		declarateur                         {	char* empty = calloc(1, sizeof(char));
-																							$$ = concat($1, empty);
-																							free($1);
+																							$$ = concat($1.code, empty);
+																							free($1.code);
 																							free(empty);}
 ;
 
@@ -129,15 +138,19 @@ declarateur	:
 																						//$$ = $1;
 																						//printf("Déclarateur $$ : %s\n", $$);
 																						char* empty = calloc(1, sizeof(char));
-																						$$ = concat($1, empty);
+																						$$.name = concat($1, empty);
+																						$$.size = 1;
+																						$$.code = concat($1, empty);
 																						free(empty);
 																						free($1);
                                         }
 
-	|	declarateur '[' CONSTANTE ']'				{ char* temp1 = concat($1, lbracket);
-																					char* cste = "CONSTANTE";
+	|	declarateur '[' CONSTANTE ']'				{ char* temp1 = concat($1.name, lbracket);
+																					//char* cste = "CONSTANTE";
+																					$$.size = $3 * $1.size;
+																					char* cste = int_to_str($$.size);
 																					char* temp2 = concat(temp1, cste);
-																					$$ = concat(temp2, rbracket);
+																					$$.code = concat(temp2, rbracket);
 																					free(temp1);
 																					free(temp2);}
 ;

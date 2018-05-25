@@ -16,3 +16,9 @@ char* concat(char* s1, char* s2) {
 
   return res;
 }
+
+char* int_to_str(int n) {
+  char* str = calloc(12, sizeof(char));
+  sprintf(str, "%d", n);
+  return str;
+}
