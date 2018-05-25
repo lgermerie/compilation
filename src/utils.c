@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+int current_label = 1;
+char* label = "L";
+
 char* concat(char* s1, char* s2) {
 
   int longueur_res = strlen(s1) + strlen(s2) + 1;
@@ -21,4 +24,12 @@ char* int_to_str(int n) {
   char* str = calloc(12, sizeof(char));
   sprintf(str, "%d", n);
   return str;
+}
+
+char* new_label() {
+  char* tostr = int_to_str(current_label);
+  char* res = concat(label, tostr);
+  free(tostr);
+  current_label++;
+  return res;
 }

@@ -22,6 +22,7 @@
 	char* colon = ":";
 	char* equal = "=";
 	char* newline = "\n";
+	char* go = "goto ";
 %}
 
 %error-verbose
@@ -300,14 +301,48 @@ iteration	:
 																																						free(temp4);
 																																						free(temp5);
 																																						free(temp6);}
-	|	WHILE '(' condition ')' instruction																		{	char* while_loop = "while(";
+	|	WHILE '(' condition ')' instruction																		{	/* ORIGINAL
+																																						char* while_loop = "while(";
 																																						char* temp1 = concat(while_loop, $3);
 																																						char* temp2 = concat(temp1, rpar);
 																																						$$ = concat(temp2, $5);
 																																						free($3);
 																																						free($5);
 																																						free(temp1);
-																																						free(temp2);}
+																																						free(temp2);*/
+																																						char* label1 = new_label();
+																																						char* label2 = new_label();
+																																						char* temp1 = concat(go, label1);
+																																						char* temp2 = concat(temp1, newline);
+																																						char* temp3 = concat(label2, colon);
+																																						char* temp4 = concat(temp3, newline);
+																																						char* temp5 = concat(temp4, $5);
+																																						char* temp6 = concat(temp5, newline);
+																																						char* temp7 = concat(temp6, label1);
+																																						char* temp8 = concat(temp7, colon);
+																																						char* iftest = " if(";
+																																						char* temp9 = concat(temp8, iftest);
+																																						char* temp10 = concat(temp9, $3);
+																																						char* rpargoto = ") goto ";
+																																						char* temp11 = concat(temp10, rpargoto);
+																																						char* temp12 = concat(temp11, label2);
+																																						$$ = concat(temp12, newline);
+																																						free(temp1);
+																																						free(temp2);
+																																						free(temp3);
+																																						free(temp4);
+																																						free(temp5);
+																																						free(temp6);
+																																						free(temp7);
+																																						free(temp8);
+																																						free(temp9);
+																																						free(temp10);
+																																						free(temp11);
+																																						free(temp12);
+																																						free($3);
+																																						free($5);
+																																						free(label1);
+																																						free(label2);}
 ;
 
 selection	:
@@ -508,19 +543,19 @@ binary_comp	:
 		LT																																		{ char* op = "<";
 																																						char* empty = "";
 																																						$$ = concat(op, empty);}
-	|	GT																																		{ char* op = "<";
+	|	GT																																		{ char* op = ">";
 																																						char* empty = "";
 																																						$$ = concat(op, empty);}
-	|	GEQ																																		{ char* op = "<";
+	|	GEQ																																		{ char* op = ">=";
 																																						char* empty = "";
 																																						$$ = concat(op, empty);}
-	|	LEQ																																		{ char* op = "<";
+	|	LEQ																																		{ char* op = "<=";
 																																						char* empty = "";
 																																						$$ = concat(op, empty);}
-	|	EQ																																		{ char* op = "<";
+	|	EQ																																		{ char* op = "==";
 																																						char* empty = "";
 																																						$$ = concat(op, empty);}
-	|	NEQ																																		{ char* op = "<";
+	|	NEQ																																		{ char* op = "!=";
 																																						char* empty = "";
 																																						$$ = concat(op, empty);}
 ;
