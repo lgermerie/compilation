@@ -326,7 +326,7 @@ iteration	:
 																																						char* rpargoto = ") goto ";
 																																						char* temp11 = concat(temp10, rpargoto);
 																																						char* temp12 = concat(temp11, label2);
-																																						$$ = concat(temp12, newline);
+																																						$$ = concat(temp12, semicolon_newline);
 																																						free(temp1);
 																																						free(temp2);
 																																						free(temp3);
@@ -346,15 +346,37 @@ iteration	:
 ;
 
 selection	:
-		IF '(' condition ')' instruction %prec THEN														{	char* cond = "if(";
+		IF '(' condition ')' instruction %prec THEN														{	/*ORIGINAL
+																																						char* cond = "if(";
 																																						char* temp1 = concat(cond, $3);
 																																						char* temp2 = concat(temp1, rpar);
 																																						$$ = concat(temp2, $5);
 																																						free($3);
 																																						free($5);
 																																						free(temp1);
-																																						free(temp2);}
-	|	IF '(' condition ')' instruction ELSE instruction											{	char* cond = "if(";
+																																						free(temp2);*/
+																																						char* ifnot = "if(!(";
+																																						char* temp1 = concat(ifnot, $3);
+																																						char* double_rpar = ")) goto ";
+																																						char* temp2 = concat(temp1, double_rpar);
+																																						char* label1 = new_label();
+																																						char* temp3 = concat(temp2, label1);
+																																						char* temp4 = concat(temp3, semicolon_newline);
+																																						char* temp5 = concat(temp4, $5);
+																																						char* temp6 = concat(temp5, label1);
+																																						char* colon_nl = ":\n";
+																																						$$ = concat(temp6, colon_nl);
+																																						free(temp1);
+																																						free(temp2);
+																																						free(temp3);
+																																						free(temp4);
+																																						free(temp5);
+																																						free(temp6);
+																																						free(label1);
+																																						free($3);
+																																						free($5);}
+	|	IF '(' condition ')' instruction ELSE instruction											{	/*ORIGINAL
+																																						char* cond = "if(";
 																																						char* temp1 = concat(cond, $3);
 																																						char* temp2 = concat(temp1, rpar);
 																																						char* temp3 = concat(temp2, $5);
@@ -367,7 +389,42 @@ selection	:
 																																						free(temp1);
 																																						free(temp2);
 																																						free(temp3);
-																																						free(temp4);}
+																																						free(temp4);*/
+																																						char* ifnot = "if(!(";
+																																						char* temp1 = concat(ifnot, $3);
+																																						char* double_rpar = ")) goto ";
+																																						char* temp2 = concat(temp1, double_rpar);
+																																						char* label1 = new_label();
+																																						char* label2 = new_label();
+																																						char* temp3 = concat(temp2, label1);
+																																						char* temp4 = concat(temp3, semicolon_newline);
+																																						char* temp5 = concat(temp4, $5);
+																																						char* temp6 = concat(temp5, go);
+																																						char* temp7 = concat(temp6, label2);
+																																						char* temp8 = concat(temp7, semicolon_newline);
+																																						char* temp9 = concat(temp8, label1);
+																																						char* colon_nl = ":\n";
+																																						char* temp10 = concat(temp9, colon_nl);
+																																						char* temp11 = concat(temp10, $7);
+																																						char* temp12 = concat(temp11, label2);
+																																						$$ = concat(temp12, colon_nl);
+																																						free(temp1);
+																																						free(temp2);
+																																						free(temp3);
+																																						free(temp4);
+																																						free(temp5);
+																																						free(temp6);
+																																						free(temp7);
+																																						free(temp8);
+																																						free(temp9);
+																																						free(temp10);
+																																						free(temp11);
+																																						free(temp12);
+																																						free(label1);
+																																						free(label2);
+																																						free($3);
+																																						free($5);
+																																						free($7);}
 	|	SWITCH '(' expression ')' instruction																	{	char* switch_kw = "switch(";
 																																						char* temp1 = concat(switch_kw, $3);
 																																						char* temp2 = concat(temp1, rpar);
