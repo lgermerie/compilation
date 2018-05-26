@@ -144,25 +144,26 @@ declarateur	:
 																								}
 																								add_global($1);
 																						}
-																						//$$ = $1;
-																						//printf("Déclarateur $$ : %s\n", $$);
-																						char* empty = calloc(1, sizeof(char));
+																						
+																						char* empty = "";
+																						$$.code = concat($1, empty);
 																						$$.name = concat($1, empty);
 																						$$.size = 1;
-																						$$.code = concat($1, empty);
-																						free(empty);
 																						free($1);
                                         }
 
-	|	declarateur '[' CONSTANTE ']'				{ char* temp1 = concat($1.name, lbracket);
-																					//char* cste = "CONSTANTE";
+	|	declarateur '[' CONSTANTE ']'				{ char* empty = calloc(1, sizeof(char));
 																					$$.size = $3 * $1.size;
+																					$$.name = concat($1.name, empty);
+																					char* temp1 = concat($1.name, lbracket);
 																					char* cste = int_to_str($$.size);
 																					char* temp2 = concat(temp1, cste);
 																					$$.code = concat(temp2, rbracket);
+																					free(empty);
 																					free(temp1);
+																					free(cste);
 																					free(temp2);
-																					free($1.name);}
+																				}
 ;
 
 fonction	:
@@ -529,7 +530,7 @@ expression	:
 																																						free($2.code);}
 	|	CONSTANTE																															{ char* cste = int_to_str($1);
 																																						char* empty = "";
-																																						$$.code = cste;}
+																																						$$.code = concat(cste, empty);}
 	|	variable																															{ $$.code = $1.code;}
 	|	IDENTIFICATEUR '(' liste_expressions ')'															{ char* temp1 = concat($1, lpar);
 																																						char* temp2 = concat(temp1, $3.code);
