@@ -48,19 +48,23 @@
 %type<valeur> CONSTANTE
 %type<var> declarateur
 
-%code requires {
+/*%code requires {
 	typedef	struct New_Var {
 	  char* name;
 	  char* code;
 	  int size;
 	} new_var;
 }
-
+*/
 %union {
     char* id;  /* Pour réccupérer le nom des identificateurs */
 		int valeur;
 		char* code;
-		new_var var;
+		struct {
+			char* name;
+		  char* code;
+		  int size;
+		} var;
 }
 
 %left OP
