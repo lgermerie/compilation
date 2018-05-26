@@ -105,23 +105,33 @@ liste_fonctions	:
 ;
 
 declaration	:
-        type liste_declarateurs ';'				{	char* temp_code = concat($1.code, $2.code);
+        type liste_declarateurs ';'				{	/*char* temp_code = concat($1.code, $2.code);
 																						$$.code = concat(temp_code, semicolon_newline);
 																						free($1.code);
 																						free($2.code);
-																						free(temp_code);
-																						//printf("----> Déclaration : %s \n", $$);
+																						free(temp_code);*/
+																						$$.code = $2.code;
 																					}
 ;
 
 liste_declarateurs	:
-        liste_declarateurs ',' declarateur  { char* temp = concat($1.code, coma);
+        liste_declarateurs ',' declarateur  { /*char* temp = concat($1.code, coma);
 																							$$.code = concat(temp, $3.code);
 																							free($1.code);
 																							free($3.code);
-																							free(temp);}
+																							free(temp);*/
+																							char* type_int = "int ";//hardcoded for now
+																							char* temp1 = concat($1.code, type_int);
+																							char* temp2 = concat(temp1, $3.code);
+																							$$.code = concat(temp2, semicolon_newline);
+																							free(temp1);
+																							free(temp2);
+																							free($1.code);
+																							free($3.code);}
 		|		declarateur                         {	char* empty = calloc(1, sizeof(char));
-																							$$.code = concat($1.code, empty);
+																							char* type_int = "int ";
+																							char* temp1 = concat(type_int, $1.code);
+																							$$.code = concat(temp1, semicolon_newline);
 																							free($1.code);
 																							free(empty);}
 ;
