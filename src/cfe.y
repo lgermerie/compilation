@@ -66,6 +66,7 @@
 		struct {
 		  char* name;
 			char* code;
+			char* switch_var;
 			int size;
 		} code;
 }
@@ -144,7 +145,7 @@ declarateur	:
 																								}
 																								add_global($1);
 																						}
-																						
+
 																						char* empty = "";
 																						$$.code = concat($1, empty);
 																						$$.name = concat($1, empty);
@@ -268,25 +269,31 @@ liste_instructions :
 ;
 
 instruction	:
-		iteration																						{ char* empty = calloc(1, sizeof(char));
+		iteration																						{ $1.switch_var = $$.switch_var;
+																													char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
-	|	selection																						{ char* empty = calloc(1, sizeof(char));
+	|	selection																						{ $1.switch_var = $$.switch_var;
+																													char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
-	|	saut																								{ char* empty = calloc(1, sizeof(char));
+	|	saut																								{ $1.switch_var = $$.switch_var;
+																													char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
-	|	affectation ';'																			{ $$.code = concat($1.code, semicolon_newline);
+	|	affectation ';'																			{ $1.switch_var = $$.switch_var;
+																													$$.code = concat($1.code, semicolon_newline);
 																													free($1.code);}
-	|	bloc																								{ char* empty = calloc(1, sizeof(char));
+	|	bloc																								{ $1.switch_var = $$.switch_var;
+																													char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
-	|	appel																								{ char* empty = calloc(1, sizeof(char));
+	|	appel																								{ $1.switch_var = $$.switch_var;
+																													char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
@@ -365,6 +372,7 @@ selection	:
 																																						free($5);
 																																						free(temp1);
 																																						free(temp2);*/
+																																						$5.switch_var = $$.switch_var;
 																																						char* ifnot = "if(!(";
 																																						char* temp1 = concat(ifnot, $3.code);
 																																						char* double_rpar = ")) goto ";
@@ -400,6 +408,8 @@ selection	:
 																																						free(temp2);
 																																						free(temp3);
 																																						free(temp4);*/
+																																						$5.switch_var = $$.switch_var;
+																																						$7.switch_var = $$.switch_var;
 																																						char* ifnot = "if(!(";
 																																						char* temp1 = concat(ifnot, $3.code);
 																																						char* double_rpar = ")) goto ";
@@ -435,23 +445,61 @@ selection	:
 																																						free($3.code);
 																																						free($5.code);
 																																						free($7.code);}
-	|	SWITCH '(' expression ')' instruction																	{	char* switch_kw = "switch(";
+	|	SWITCH '(' expression ')' instruction																	{	/* ORIGINAL
+																																						char* switch_kw = "switch(";
 																																						char* temp1 = concat(switch_kw, $3.code);
 																																						char* temp2 = concat(temp1, rpar);
 																																						$$.code = concat(temp2, $5.code);
 																																						free($3.code);
 																																						free($5.code);
 																																						free(temp1);
-																																						free(temp2);}
-	|	CASE CONSTANTE ':' instruction																				{ char* case_kw = "case ";
+																																						free(temp2);*/
+																																						char* empty = "";
+																																						$$.switch_var = concat($3.code, empty);/////////////////////:
+																																						$5.switch_var = concat($3.code, empty);
+																																						$$.code = $5.code;
+																																						free($$.switch_var);
+																																						free($5.switch_var);
+																																					}
+	|	CASE CONSTANTE ':' instruction																				{ /*char* case_kw = "case ";
 																																						char* cste = int_to_str($2);
 																																						char* temp1 = concat(case_kw, cste);
 																																						char* temp2 = concat(temp1, colon);
 																																						$$.code = concat(temp2, $4.code);
 																																						free($4.code);
 																																						free(temp1);
-																																						free(temp2);}
-	|	DEFAULT ':' instruction																								{ char* default_kw = "default : ";
+																																						free(temp2);*/
+																																						char* subst = ".....";
+																																						$4.switch_var = subst;//$$.switch_var;
+																																						printf("switchvar = %s\n",$$.switch_var);
+																																						char* iflpar = "if(";
+																																						char* nequals = " != ";
+																																						char* rpargoto = ") goto ";
+																																						char* temp1 = concat(iflpar, subst/*$$.switch_var**/);
+																																						char* temp2 = concat(temp1, nequals);
+																																						char* cste = int_to_str($2);
+																																						char* temp3 = concat(temp2, cste);
+																																						char* temp4 = concat(temp3, rpargoto);
+																																						char* label1 = new_label();
+																																						char* temp5 = concat(temp4, label1);
+																																						char* temp6 = concat(temp5, semicolon_newline);
+																																						char* temp7 = concat(temp6, $4.code);
+																																						char* temp8 = concat(temp7, label1);
+																																						char* colon_nl = " :\n";
+																																						$$.code = concat(temp8, colon_nl);
+																																						free(temp1);
+																																						free(temp2);
+																																						free(temp3);
+																																						free(temp4);
+																																						free(temp5);
+																																						free(temp6);
+																																						free(temp7);
+																																						free(temp8);
+																																						free(label1);
+																																						free(cste);
+																																						free($4.code);}
+	|	DEFAULT ':' instruction																								{ $3.switch_var = $$.switch_var;
+																																						char* default_kw = "default : ";
 																																						$$.code = concat(default_kw, $3.code);
 																																						free($3.code);}
 ;
