@@ -19,7 +19,7 @@
 	char* rbrace = "}\n";
 	char* lbracket = "[";
 	char* rbracket = "]";
-	char* colon = ":";
+	char* colon = ": ";
 	char* equal = "=";
 	char* newline = "\n";
 	char* go = "goto ";
@@ -149,8 +149,7 @@ declarateur	:
 																					free(empty);
 																					free(temp1);
 																					free(cste);
-																					free(temp2);
-																				}
+																					free(temp2);}
 ;
 
 fonction	:
@@ -286,7 +285,37 @@ instruction	:
 ;
 
 iteration	:
-		FOR '(' affectation ';' condition ';' affectation ')' instruction			{	char* for_loop = "for(";
+		FOR '(' affectation ';' condition ';' affectation ')' instruction			{	char* empty = "";
+																																						char* label1 = new_label();
+																																						char* label2 = new_label();
+																																						char* temp0 = concat(label1, colon);
+																																						char* temp1 = concat($3.code, semicolon_newline);
+																																						char* ifnot = "if(!";
+																																						char* go = ") goto ";
+																																						char* temp2 = concat(temp1, temp0);
+																																						char* temp3 = concat(temp1, ifnot);
+																																						char* temp4 = concat(temp3, $5.code);
+																																						char* temp5 = concat(temp4, go);
+																																						char* temp6 = concat(temp5, label2);
+																																						char* temp7 = concat(temp6, semicolon_newline);
+																																						char* temp8 = concat(temp7, $9.code);
+																																						char* temp9 = concat(temp8, $7.code);//à remplacer par temp_vars peut être
+																																						char* temp10 = concat(temp9, label2);
+																																						$$.code = concat(temp10, colon);
+																																						free(temp0);
+																																						free(temp1);
+																																						free(temp2);
+																																						free(temp3);
+																																						free(temp4);
+																																						free(temp5);
+																																						free(temp6);
+																																						free(temp7);
+																																						free(temp8);
+																																						free(temp9);
+																																						free(temp10);
+																																						free(label1);
+																																						free(label2);
+																																						/*char* for_loop = "for(";
 																																						char* temp1 = concat(for_loop, $3.code);
 																																						char* temp2 = concat(temp1, semicolon);
 																																						char* temp3 = concat(temp2, $5.code);
@@ -303,17 +332,8 @@ iteration	:
 																																						free(temp3);
 																																						free(temp4);
 																																						free(temp5);
-																																						free(temp6);}
-	|	WHILE '(' condition ')' instruction																		{	/* ORIGINAL
-																																						char* while_loop = "while(";
-																																						char* temp1 = concat(while_loop, $3);
-																																						char* temp2 = concat(temp1, rpar);
-																																						$$ = concat(temp2, $5);
-																																						free($3);
-																																						free($5);
-																																						free(temp1);
-																																						free(temp2);*/
-																																						char* label1 = new_label();
+																																						free(temp6);*/}
+	|	WHILE '(' condition ')' instruction																		{ char* label1 = new_label();
 																																						char* label2 = new_label();
 																																						char* temp1 = concat(go, label1);
 																																						char* temp2 = concat(temp1, newline);
@@ -509,11 +529,13 @@ saut	:
 affectation	:
 		variable '=' expression																								{	char* temp1 = concat($1.code, equal);
 																																						char* temp2 = concat(temp1, $3.code);
-																																						$$.code = concat($3.temp_vars, temp2);
+																																						char* temp3 = concat(temp2, semicolon_newline);
+																																						$$.code = concat($3.temp_vars, temp3);
 																																						free($1.code);
 																																						free($3.code);
 																																						free(temp1);
 																																						free(temp2);
+																																						free(temp3);
 																																						free($3.temp_vars);}
 ;
 
@@ -546,6 +568,7 @@ appel	:
 variable	:
 		IDENTIFICATEUR											 																	{	if (!fetch_all($1)) { printf("failed to fetch %s",$1); print_tables(); undefined_id_error($1);}
 																																						char* empty = calloc(1, sizeof(char));
+																																						$$.temp_vars = calloc(1, sizeof(char));
 																																						$$.code = concat($1, empty);
 																																						free(empty);
 																																					}
@@ -553,6 +576,7 @@ variable	:
 																																						char* temp2 = concat(temp1, lbracket);
 																																						char* temp3 = concat(temp2, $3.code);
 																																						$$.temp_vars = concat($1.temp_vars, $3.temp_vars);
+																																						printf("OK\n");
 																																						$$.code = concat(temp3, rbracket);
 																																						/*char* temp1 = concat($1.code, lbracket);
 																																						char* temp2 = concat(temp1, $3.code);
