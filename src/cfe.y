@@ -4,6 +4,7 @@
 	#include<string.h>
 	#include"symTable.h"
 	#include "utils.h"
+
 	int yylex();
 	void yyerror(char const *s);
 	void id_error(char* id_name);
@@ -66,7 +67,6 @@
 		struct {
 		  char* name;
 			char* code;
-			char* switch_var;
 			int size;
 		} code;
 }
@@ -279,31 +279,25 @@ liste_instructions :
 ;
 
 instruction	:
-		iteration																						{ $1.switch_var = $$.switch_var;
-																													char* empty = calloc(1, sizeof(char));
+		iteration																						{ char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
-	|	selection																						{ $1.switch_var = $$.switch_var;
-																													char* empty = calloc(1, sizeof(char));
+	|	selection																						{ char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
-	|	saut																								{ $1.switch_var = $$.switch_var;
-																													char* empty = calloc(1, sizeof(char));
+	|	saut																								{ char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
-	|	affectation ';'																			{ $1.switch_var = $$.switch_var;
-																													$$.code = concat($1.code, semicolon_newline);
+	|	affectation ';'																			{ $$.code = concat($1.code, semicolon_newline);
 																													free($1.code);}
-	|	bloc																								{ $1.switch_var = $$.switch_var;
-																													char* empty = calloc(1, sizeof(char));
+	|	bloc																								{ char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
-	|	appel																								{ $1.switch_var = $$.switch_var;
-																													char* empty = calloc(1, sizeof(char));
+	|	appel																								{ char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
 																													free(empty);
 																													free($1.code);}
@@ -382,7 +376,6 @@ selection	:
 																																						free($5);
 																																						free(temp1);
 																																						free(temp2);*/
-																																						$5.switch_var = $$.switch_var;
 																																						char* ifnot = "if(!(";
 																																						char* temp1 = concat(ifnot, $3.code);
 																																						char* double_rpar = ")) goto ";
@@ -418,8 +411,6 @@ selection	:
 																																						free(temp2);
 																																						free(temp3);
 																																						free(temp4);*/
-																																						$5.switch_var = $$.switch_var;
-																																						$7.switch_var = $$.switch_var;
 																																						char* ifnot = "if(!(";
 																																						char* temp1 = concat(ifnot, $3.code);
 																																						char* double_rpar = ")) goto ";
@@ -464,12 +455,16 @@ selection	:
 																																						free($5.code);
 																																						free(temp1);
 																																						free(temp2);*/
-																																						char* empty = "";
-																																						$$.switch_var = concat($3.code, empty);/////////////////////:
-																																						$5.switch_var = concat($3.code, empty);
-																																						$$.code = $5.code;
-																																						free($$.switch_var);
-																																						free($5.switch_var);
+
+																																						char* switch_expr = strdup($3.code);
+																																						char* code = strdup($5.code);
+
+																																						$$.code = replace_substring(code, "...", switch_expr);
+
+																																						free(code);
+																																						free(switch_expr);
+
+
 																																					}
 	|	CASE CONSTANTE ':' instruction																		{ /*char* case_kw = "case ";
 																																						char* cste = int_to_str($2);
@@ -479,13 +474,11 @@ selection	:
 																																						free($4.code);
 																																						free(temp1);
 																																						free(temp2);*/
-																																						char* subst = ".....";
-																																						$4.switch_var = subst;//$$.switch_var;
-																																						printf("switchvar = %s\n",$$.switch_var);
+																																						char* subst = "...";
 																																						char* iflpar = "if(";
 																																						char* nequals = " != ";
 																																						char* rpargoto = ") goto ";
-																																						char* temp1 = concat(iflpar, subst/*$$.switch_var**/);
+																																						char* temp1 = concat(iflpar, subst/*$$.switch_expr**/);
 																																						char* temp2 = concat(temp1, nequals);
 																																						char* cste = int_to_str($2);
 																																						char* temp3 = concat(temp2, cste);
@@ -508,8 +501,7 @@ selection	:
 																																						free(label1);
 																																						free(cste);
 																																						free($4.code);}
-	|	DEFAULT ':' instruction																								{ $3.switch_var = $$.switch_var;
-																																						char* default_kw = "default : ";
+	|	DEFAULT ':' instruction																								{ char* default_kw = "default : ";
 																																						$$.code = concat(default_kw, $3.code);
 																																						free($3.code);}
 ;
