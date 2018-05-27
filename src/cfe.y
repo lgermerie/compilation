@@ -576,7 +576,6 @@ variable	:
 																																						char* temp2 = concat(temp1, lbracket);
 																																						char* temp3 = concat(temp2, $3.code);
 																																						$$.temp_vars = concat($1.temp_vars, $3.temp_vars);
-																																						printf("OK\n");
 																																						$$.code = concat(temp3, rbracket);
 																																						/*char* temp1 = concat($1.code, lbracket);
 																																						char* temp2 = concat(temp1, $3.code);
