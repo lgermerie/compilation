@@ -3,7 +3,7 @@
 	#include<stdlib.h>
 	#include<string.h>
 	#include"symTable.h"
-	#include "utils.c"
+	#include "utils.h"
 	int yylex();
 	void yyerror(char const *s);
 	void id_error(char* id_name);
@@ -471,7 +471,7 @@ selection	:
 																																						free($$.switch_var);
 																																						free($5.switch_var);
 																																					}
-	|	CASE CONSTANTE ':' instruction																				{ /*char* case_kw = "case ";
+	|	CASE CONSTANTE ':' instruction																		{ /*char* case_kw = "case ";
 																																						char* cste = int_to_str($2);
 																																						char* temp1 = concat(case_kw, cste);
 																																						char* temp2 = concat(temp1, colon);
