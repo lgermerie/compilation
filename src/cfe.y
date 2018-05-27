@@ -46,21 +46,8 @@
 %type<code> binary_op binary_rel binary_comp declarateur
 %type<code> ';' ',' '(' ')' '{' '}' '[' ']' ':' '='
 %type<valeur> CONSTANTE
-//%type<var> declarateur
-
-/*%code requires {
-	typedef	struct New_Var {
-	  char* name;
-	  char* code;
-	  int size;
-	} new_var;
-}*/
 
 %union {
-    /*char* id;  // Pour réccupérer le nom des identificateurs
-		int valeur;
-		char* code;
-		new_var var;*/
 		int valeur;
 		char* id;
 		struct {
@@ -68,6 +55,7 @@
 			char* code;
 			char* switch_var;
 			int size;
+			char* temp_vars;
 		} code;
 }
 
@@ -100,27 +88,15 @@ liste_fonctions	:
 																						$$.code = concat($1.code, empty);
 																						free(empty);
 																						free($1.code);
-																						//print_tables();
 																					}
 ;
 
 declaration	:
-        type liste_declarateurs ';'				{	/*char* temp_code = concat($1.code, $2.code);
-																						$$.code = concat(temp_code, semicolon_newline);
-																						free($1.code);
-																						free($2.code);
-																						free(temp_code);*/
-																						$$.code = $2.code;
-																					}
+        type liste_declarateurs ';'				{	$$.code = $2.code;}
 ;
 
 liste_declarateurs	:
-        liste_declarateurs ',' declarateur  { /*char* temp = concat($1.code, coma);
-																							$$.code = concat(temp, $3.code);
-																							free($1.code);
-																							free($3.code);
-																							free(temp);*/
-																							char* type_int = "int ";//hardcoded for now
+        liste_declarateurs ',' declarateur  { char* type_int = "int ";//hardcoded for now
 																							char* temp1 = concat($1.code, type_int);
 																							char* temp2 = concat(temp1, $3.code);
 																							$$.code = concat(temp2, semicolon_newline);
@@ -465,11 +441,12 @@ selection	:
 																																						free(temp1);
 																																						free(temp2);*/
 																																						char* empty = "";
-																																						$$.switch_var = concat($3.code, empty);/////////////////////:
+																																						$$.switch_var = concat($3.code, empty);
 																																						$5.switch_var = concat($3.code, empty);
-																																						$$.code = $5.code;
+																																						$$.code = concat($3.temp_vars, $5.code);
 																																						free($$.switch_var);
 																																						free($5.switch_var);
+																																						free($3.temp_vars);
 																																					}
 	|	CASE CONSTANTE ':' instruction																				{ /*char* case_kw = "case ";
 																																						char* cste = int_to_str($2);
@@ -523,16 +500,21 @@ saut	:
 																																						$$.code = concat(return_kw, empty);}
 	|	RETURN expression ';'																									{	char* return_kw = "return ";
 																																						char* temp1 = concat(return_kw, $2.code);
-																																						$$.code = concat(temp1, semicolon_newline);
-																																						free($2.code);}
+																																						char* temp2 = concat(temp1, semicolon_newline);
+																																						$$.code = concat($2.temp_vars, temp2);
+																																						free($2.code);
+																																						free($2.temp_vars);}
 ;
 
 affectation	:
 		variable '=' expression																								{	char* temp1 = concat($1.code, equal);
-																																						$$.code = concat(temp1, $3.code);
+																																						char* temp2 = concat(temp1, $3.code);
+																																						$$.code = concat($3.temp_vars, temp2);
 																																						free($1.code);
 																																						free($3.code);
-																																						free(temp1);}
+																																						free(temp1);
+																																						free(temp2);
+																																						free($3.temp_vars);}
 ;
 
 bloc	:
@@ -548,61 +530,127 @@ bloc	:
 ;
 
 appel	:
-		IDENTIFICATEUR '(' liste_expressions ')' ';'													{	char* temp1 = concat($1, lpar);
+		IDENTIFICATEUR '(' liste_expressions ')' ';'													{	printf("appel\n");
+																																						char* temp1 = concat($1, lpar);
 																																						char* temp2 = concat(temp1, $3.code);
 																																						char* end = ");\n";
-																																						$$.code = concat(temp2, end);
+																																						char* temp3 = concat(temp2, end);
+																																						$$.code = concat($3.temp_vars, temp3);
 																																						free($1);
 																																						free($3.code);
 																																						free(temp1);
-																																						free(temp2);}
+																																						free(temp2);
+																																						free(temp3);
+																																						free($3.temp_vars);}
 ;
 
 variable	:
 		IDENTIFICATEUR											 																	{	if (!fetch_all($1)) { printf("failed to fetch %s",$1); print_tables(); undefined_id_error($1);}
 																																						char* empty = calloc(1, sizeof(char));
 																																						$$.code = concat($1, empty);
+																																						printf("ID : %s\n", $$.code);
 																																						free(empty);
 																																					}
-	|	variable '[' expression ']'																						{	char* temp1 = concat($1.code, lbracket);
+	|	variable '[' expression ']'																						{	char* temp1 = concat($3.temp_vars, $1.code);
+																																						char* temp2 = concat(temp1, lbracket);
+																																						char* temp3 = concat(temp2, $3.code);
+																																						$$.temp_vars = concat($1.temp_vars, $3.temp_vars);
+																																						$$.code = concat(temp3, rbracket);
+																																						/*char* temp1 = concat($1.code, lbracket);
 																																						char* temp2 = concat(temp1, $3.code);
-																																						$$.code = concat(temp2, rbracket);
+																																						$$.code = concat(temp2, rbracket);*/
 																																						free($1.code);
 																																						free($3.code);
 																																						free(temp1);
-																																						free(temp2);}
+																																						free(temp2);
+																																						free(temp3);
+																																						free($3.temp_vars);}
 ;
 
 expression	:
 		'(' expression ')'																										{	char* temp1 = concat(lpar, $2.code);
 																																						$$.code = concat(temp1, rpar);
-																																						free($2.code);}
-	|	expression binary_op expression %prec OP															{	char* temp1 = concat($1.code, $2.code);
+																																						$$.temp_vars = $2.temp_vars;
+																																						free($2.code);
+																																						free($$.temp_vars);}
+	|	expression binary_op expression %prec OP															{
+																																						char* type_int = "int ";
+																																						char* equals = "=";
+																																						char* empty = "";
+																																						char* var1 = new_var();
+																																						char* temp1 = concat(type_int, var1);
+																																						char* temp2 = concat(temp1, semicolon_newline);//declaration de la nouvelle variable
+																																						char* temp3 = concat(temp2, var1);
+																																						char* temp4 = concat(temp3, equals);
+																																						char* temp5 = concat(temp4, $1.code);
+																																						char* temp6 = concat(temp5, $2.code);
+																																						char* temp7 = concat(temp6, $3.code);
+																																						char* temp8 = concat(temp7, semicolon_newline);
+																																						char* new_vars = concat($1.temp_vars, $3.temp_vars);
+																																						/*if ($1.temp_vars && $3.temp_vars) {
+																																							new_vars = concat($1.temp_vars, $3.temp_vars);
+																																						} else {
+																																							if ($1.temp_vars || $3.temp_vars) {
+																																								if ($1.temp_vars) {
+																																									new_vars = concat($1.temp_vars, empty);
+																																								} else {
+																																									new_vars = concat($3.temp_vars, empty);
+																																								}
+																																							} else {
+																																								new_vars = calloc(1, sizeof(char));
+																																							}
+																																						}*/
+																																						$$.temp_vars = concat(new_vars, temp8);
+																																						$$.code = concat(var1, empty);
+																																						printf("ligne maudite %s\n", $$.temp_vars);
+																																						free(temp1);
+																																						free(temp2);
+																																						free(temp3);
+																																						free(temp4);
+																																						free(temp5);
+																																						free(temp6);
+																																						free(temp7);
+																																						free(new_vars);
+																																						/*char* temp1 = concat($1.code, $2.code);
 																																						$$.code = concat(temp1, $3.code);
 																																						free($1.code);
 																																						free($2.code);
 																																						free($3.code);
-																																						free(temp1);}
+																																						free(temp1);*/}
 	|	MOINS expression																											{	char* moins = "-";
+																																						$$.temp_vars = $2.temp_vars;
 																																						$$.code = concat(moins, $2.code);
-																																						free($2.code);}
+																																						free($2.code);
+																																						free($2.temp_vars);}
 	|	CONSTANTE																															{ char* cste = int_to_str($1);
 																																						char* empty = "";
+																																						$$.temp_vars = calloc(1,sizeof(char));
 																																						$$.code = concat(cste, empty);}
-	|	variable																															{ $$.code = $1.code;}
-	|	IDENTIFICATEUR '(' liste_expressions ')'															{ char* temp1 = concat($1, lpar);
+	|	variable																															{ char* empty = "";
+																																						$$.temp_vars = calloc(1,sizeof(char));
+																																						$$.code = $1.code;
+																																						printf("variable : %s\n", $$.code);}
+	|	IDENTIFICATEUR '(' liste_expressions ')'															{ $$.temp_vars = $3.temp_vars;
+																																						char* temp1 = concat($1, lpar);
 																																						char* temp2 = concat(temp1, $3.code);
 																																						$$.code = concat(temp2, rpar);
-																																						free($3.code);}
+																																						free($3.code);
+																																						free(temp1);
+																																						free(temp2);}
 ;
 
 liste_expressions	:
-		liste_expressions ',' expression																			{ char* temp1 = concat($1.code, coma);
+		liste_expressions ',' expression																			{ $$.temp_vars = concat($1.temp_vars, $3.temp_vars);
+																																						char* temp1 = concat($1.code, coma);
 																																						$$.code = concat(temp1, $3.code);
 																																						free($1.code);
-																																						free($3.code);}
-	|   expression																													{	$$.code = $1.code;}
-	|																																				{ $$.code = calloc(1, sizeof(char));}
+																																						free($3.code);
+																																						free($1.temp_vars);
+																																						free($3.temp_vars);}
+	|   expression																													{	$$.temp_vars = $1.temp_vars;
+																																						$$.code = $1.code;}
+	|																																				{ $$.temp_vars = calloc(1, sizeof(char));
+																																						$$.code = calloc(1, sizeof(char));}
 ;
 
 condition	:
@@ -621,12 +669,17 @@ condition	:
 																																						$$.code = concat(temp1, rpar);
 																																						free($2.code);
 																																						free(temp1);}
-	|	expression binary_comp expression																			{	char* temp1 = concat($1.code, $2.code);
-																																						$$.code = concat(temp1, $3.code);
+	|	expression binary_comp expression																			{	char* previous_vars = concat($1.temp_vars, $3.temp_vars);
+																																						char* temp1 = concat($1.code, $2.code);
+																																						char* temp2 = concat(temp1, $3.code);
+																																						$$.code = concat(previous_vars, temp2);
 																																						free($1.code);
 																																						free($2.code);
 																																						free($3.code);
-																																						free(temp1);}
+																																						free(temp1);
+																																						free(temp2);
+																																						free($1.temp_vars);
+																																						free($3.temp_vars);}
 ;
 
 binary_op	:
