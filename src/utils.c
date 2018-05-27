@@ -40,30 +40,6 @@ char* new_var() {
   free(tostr);
   current_var++;
   return res;
-
-typedef struct _list list;
-
-struct _list {
-  int val;
-  list* next;
-};
-
-void increment(list* list_to_increment , int value) {
-  if (list_to_increment) {
-    list_to_increment->val += value;
-    increment(list_to_increment->next, value);
-  }
-}
-
-list* new_list(int value) {
-
-  res_list = malloc(sizeof(list));
-
-  res_list->next = NULL;
-  res_list->val = value;
-
-  return res_list;
-  
 }
 
 typedef struct _list list;
