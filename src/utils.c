@@ -3,8 +3,9 @@
 #include <string.h>
 
 int current_label = 1;
+int current_var = 1;
 char* label = "L";
-
+char* var_prefix = "_x";
 char* concat(char* s1, char* s2) {
 
   int longueur_res = strlen(s1) + strlen(s2) + 1;
@@ -31,5 +32,13 @@ char* new_label() {
   char* res = concat(label, tostr);
   free(tostr);
   current_label++;
+  return res;
+}
+
+char* new_var() {
+  char* tostr = int_to_str(current_var);
+  char* res = concat(var_prefix, tostr);
+  free(tostr);
+  current_var++;
   return res;
 }
