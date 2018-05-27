@@ -44,33 +44,48 @@ char* new_var() {
   return res;
 }
 
+
 // Remplace toutes les occurences de sub_string_old dans une string par sub_string_new
 char* replace_substring(char* string, char* sub_string_old, char* sub_string_new) {
 
-  // On calcule la taille du résultat
-  int total_length = strlen(string) + strlen(sub_string_new) - strlen(sub_string_old) + 1;
+  char* str_res = strndup(string, strlen(string));
+  int delta = strlen(sub_string_new) - strlen(sub_string_old);
 
-  //int position =
+  char* position;
 
-  char* new_string = malloc(total_length);
-  memset(new_string, '\0', total_length);
 
-  //return position;
+  while((position = strstr(str_res, sub_string_old)) != NULL) {
+
+    char* new_str = malloc(strlen(str_res) + delta);
+    memset(new_str, '\0', strlen(str_res) + delta);
+
+    strncat(new_str, str_res, position - str_res); // On copie tout le début de la chaine jusqu'à l'apparition du motif
+    strcat(new_str, sub_string_new);
+    strcat(new_str, position + strlen(sub_string_old));
+
+    free(str_res);
+    str_res = strdup(new_str);
+    free(new_str);
+
+  }
+
+  return str_res;
 }
 
 /*
 int main(int argc, char const *argv[]) {
 
-  char* test = strdup("bitte");
+  char* test = strdup("T..T..");
   char* toto = strdup("tata");
 
-  char* titi = strchr(test, 't');
+  char* titi = replace_substring(test, "..", "bite");
 
-  printf("%i\n", titi - test);
+
+  printf("%s\n", titi);
   return 0;
 }
-
 */
+
 /****************************************************************
 Fonctions de gestion de la liste d'entiers
 ****************************************************************/

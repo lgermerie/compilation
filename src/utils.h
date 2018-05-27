@@ -15,4 +15,7 @@ char* new_var();
 char* new_label();
 char* int_to_str(int n);
 char* concat(char* s1, char* s2);
+
+char* replace_substring(char* string, char* sub_string_old, char* sub_string_new);
+
 #endif
