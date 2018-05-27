@@ -530,8 +530,7 @@ bloc	:
 ;
 
 appel	:
-		IDENTIFICATEUR '(' liste_expressions ')' ';'													{	printf("appel\n");
-																																						char* temp1 = concat($1, lpar);
+		IDENTIFICATEUR '(' liste_expressions ')' ';'													{	char* temp1 = concat($1, lpar);
 																																						char* temp2 = concat(temp1, $3.code);
 																																						char* end = ");\n";
 																																						char* temp3 = concat(temp2, end);
@@ -548,7 +547,6 @@ variable	:
 		IDENTIFICATEUR											 																	{	if (!fetch_all($1)) { printf("failed to fetch %s",$1); print_tables(); undefined_id_error($1);}
 																																						char* empty = calloc(1, sizeof(char));
 																																						$$.code = concat($1, empty);
-																																						printf("ID : %s\n", $$.code);
 																																						free(empty);
 																																					}
 	|	variable '[' expression ']'																						{	char* temp1 = concat($3.temp_vars, $1.code);
@@ -571,8 +569,7 @@ expression	:
 		'(' expression ')'																										{	char* temp1 = concat(lpar, $2.code);
 																																						$$.code = concat(temp1, rpar);
 																																						$$.temp_vars = $2.temp_vars;
-																																						free($2.code);
-																																						free($$.temp_vars);}
+																																						free($2.code);}
 	|	expression binary_op expression %prec OP															{
 																																						char* type_int = "int ";
 																																						char* equals = "=";
@@ -587,22 +584,8 @@ expression	:
 																																						char* temp7 = concat(temp6, $3.code);
 																																						char* temp8 = concat(temp7, semicolon_newline);
 																																						char* new_vars = concat($1.temp_vars, $3.temp_vars);
-																																						/*if ($1.temp_vars && $3.temp_vars) {
-																																							new_vars = concat($1.temp_vars, $3.temp_vars);
-																																						} else {
-																																							if ($1.temp_vars || $3.temp_vars) {
-																																								if ($1.temp_vars) {
-																																									new_vars = concat($1.temp_vars, empty);
-																																								} else {
-																																									new_vars = concat($3.temp_vars, empty);
-																																								}
-																																							} else {
-																																								new_vars = calloc(1, sizeof(char));
-																																							}
-																																						}*/
 																																						$$.temp_vars = concat(new_vars, temp8);
 																																						$$.code = concat(var1, empty);
-																																						printf("ligne maudite %s\n", $$.temp_vars);
 																																						free(temp1);
 																																						free(temp2);
 																																						free(temp3);
@@ -621,15 +604,15 @@ expression	:
 																																						$$.temp_vars = $2.temp_vars;
 																																						$$.code = concat(moins, $2.code);
 																																						free($2.code);
-																																						free($2.temp_vars);}
+																																						//free($2.temp_vars);
+																																					}
 	|	CONSTANTE																															{ char* cste = int_to_str($1);
 																																						char* empty = "";
 																																						$$.temp_vars = calloc(1,sizeof(char));
 																																						$$.code = concat(cste, empty);}
 	|	variable																															{ char* empty = "";
 																																						$$.temp_vars = calloc(1,sizeof(char));
-																																						$$.code = $1.code;
-																																						printf("variable : %s\n", $$.code);}
+																																						$$.code = $1.code;}
 	|	IDENTIFICATEUR '(' liste_expressions ')'															{ $$.temp_vars = $3.temp_vars;
 																																						char* temp1 = concat($1, lpar);
 																																						char* temp2 = concat(temp1, $3.code);
