@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 
 int current_label = 1;
 int current_var = 1;
 char* label = "L";
 char* var_prefix = "_x";
+
 char* concat(char* s1, char* s2) {
 
   int longueur_res = strlen(s1) + strlen(s2) + 1;
@@ -42,13 +44,38 @@ char* new_var() {
   return res;
 }
 
-typedef struct _list list;
+// Remplace toutes les occurences de sub_string_old dans une string par sub_string_new
+char* replace_substring(char* string, char* sub_string_old, char* sub_string_new) {
 
-struct _list {
-  int val;
-  list* next;
-};
+  // On calcule la taille du résultat
+  int total_length = strlen(string) + strlen(sub_string_new) - strlen(sub_string_old) + 1;
 
+  //int position =
+
+  char* new_string = malloc(total_length);
+  memset(new_string, '\0', total_length);
+
+  //return position;
+}
+
+/*
+int main(int argc, char const *argv[]) {
+
+  char* test = strdup("bitte");
+  char* toto = strdup("tata");
+
+  char* titi = strchr(test, 't');
+
+  printf("%i\n", titi - test);
+  return 0;
+}
+
+*/
+/****************************************************************
+Fonctions de gestion de la liste d'entiers
+****************************************************************/
+
+// Permert d'incrémenter tous les éléments d'une liste par une valeur passée en argument
 void increment(list* list_to_increment , int value) {
   if (list_to_increment) {
     list_to_increment->val += value;
@@ -56,6 +83,7 @@ void increment(list* list_to_increment , int value) {
   }
 }
 
+// Retourne un élément de liste initialisé à value
 list* new_list(int value) {
 
   list* res_list = malloc(sizeof(list));
