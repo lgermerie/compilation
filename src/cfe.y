@@ -384,6 +384,7 @@ selection	:
 																																						free($5);
 																																						free(temp1);
 																																						free(temp2);*/
+																																						char* condvars = concat($3.temp_dec, $3.temp_aff);
 																																						char* ifnot = "if(!(";
 																																						char* temp1 = concat(ifnot, $3.code);
 																																						char* double_rpar = ")) goto ";
@@ -393,8 +394,9 @@ selection	:
 																																						char* temp4 = concat(temp3, semicolon_newline);
 																																						char* temp5 = concat(temp4, $5.code);
 																																						char* temp6 = concat(temp5, label1);
-																																						char* colon_nl = ":\n";
-																																						$$.code = concat(temp6, colon_nl);
+																																						char* colon_nl = ":;\n";
+																																						char* temp7 = concat(temp6, colon_nl);
+																																						$$.code = concat(condvars, temp7);
 																																						free(temp1);
 																																						free(temp2);
 																																						free(temp3);
@@ -419,6 +421,7 @@ selection	:
 																																						free(temp2);
 																																						free(temp3);
 																																						free(temp4);*/
+																																						char* condvars = concat($3.temp_dec, $3.temp_aff);
 																																						char* ifnot = "if(!(";
 																																						char* temp1 = concat(ifnot, $3.code);
 																																						char* double_rpar = ")) goto ";
@@ -432,11 +435,12 @@ selection	:
 																																						char* temp7 = concat(temp6, label2);
 																																						char* temp8 = concat(temp7, semicolon_newline);
 																																						char* temp9 = concat(temp8, label1);
-																																						char* colon_nl = ":\n";
+																																						char* colon_nl = ":;\n";
 																																						char* temp10 = concat(temp9, colon_nl);
 																																						char* temp11 = concat(temp10, $7.code);
 																																						char* temp12 = concat(temp11, label2);
-																																						$$.code = concat(temp12, colon_nl);
+																																						char* temp13 = concat(temp12, colon_nl);
+																																						$$.code = concat(condvars, temp13);
 																																						free(temp1);
 																																						free(temp2);
 																																						free(temp3);
@@ -454,20 +458,11 @@ selection	:
 																																						free($3.code);
 																																						free($5.code);
 																																						free($7.code);}
-	|	SWITCH '(' expression ')' instruction																	{	/* ORIGINAL
-																																						char* switch_kw = "switch(";
-																																						char* temp1 = concat(switch_kw, $3.code);
-																																						char* temp2 = concat(temp1, rpar);
-																																						$$.code = concat(temp2, $5.code);
-																																						free($3.code);
-																																						free($5.code);
-																																						free(temp1);
-																																						free(temp2);*/
-
+	|	SWITCH '(' expression ')' instruction																	{
 																																						char* switch_expr = strdup($3.code);
 
 																																						char* label = new_label();
-																																						char* temp1 = concat(label, colon);
+																																						char* temp1 = concat(label, ":;");
 																																						char* temp2 = concat(temp1, newline);
 																																						char* code = concat($5.code, temp2);
 
@@ -709,16 +704,22 @@ liste_expressions	:
 condition	:
 		NOT '(' condition ')'																									{	char* not = "!(";
 																																						char* temp1 = concat(not, $3.code);
+																																						$$.temp_dec = $3.temp_dec;
+																																						$$.temp_aff = $3.temp_aff;
 																																						$$.code = concat(temp1, rpar);
 																																						free($3.code);
 																																						free(temp1);}
 	|	condition binary_rel condition %prec REL															{	char* temp1 = concat($1.code, $2.code);
+																																						$$.temp_dec = concat($1.temp_dec, $3.temp_dec);
+																																						$$.temp_aff = concat($1.temp_aff, $3.temp_aff);
 																																						$$.code = concat(temp1, $3.code);
 																																						free($1.code);
 																																						free($2.code);
 																																						free($3.code);
 																																						free(temp1);}
 	|	'(' condition ')'																											{	char* temp1 = concat(lpar, $2.code);
+																																						$$.temp_dec = $2.temp_dec;
+																																						$$.temp_aff = $2.temp_aff;
 																																						$$.code = concat(temp1, rpar);
 																																						free($2.code);
 																																						free(temp1);}
@@ -727,7 +728,9 @@ condition	:
 																																						char* previous_vars = concat(previous_dec, previous_aff);
 																																						char* temp1 = concat($1.code, $2.code);
 																																						char* temp2 = concat(temp1, $3.code);
-																																						$$.code = concat(previous_vars, temp2);
+																																						$$.temp_dec = previous_dec;
+																																						$$.temp_aff = previous_aff;
+																																						$$.code = concat("", temp2);
 																																						free($1.code);
 																																						free($2.code);
 																																						free($3.code);
