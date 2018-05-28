@@ -289,8 +289,8 @@ iteration	:
 																																						char* label2 = new_label();
 																																						char* temp0 = concat(label1, colon);
 																																						char* temp1 = concat($3.code, "");
-																																						char* ifnot = concat(label1, ": if(!");
-																																						char* go = ") goto ";
+																																						char* ifnot = concat(label1, ": if(!(");
+																																						char* go = ")) goto ";
 																																						char* temp2 = concat(temp1, temp0);
 																																						char* temp3 = concat(temp1, ifnot);
 																																						char* temp4 = concat(temp3, $5.code);
@@ -298,7 +298,7 @@ iteration	:
 																																						char* temp6 = concat(temp5, label2);
 																																						char* temp7 = concat(temp6, semicolon_newline);
 																																						char* temp8 = concat(temp7, $9.code);
-																																						char* temp9 = concat(temp8, $7.code);//à remplacer par temp_vars peut être
+																																						char* temp9 = concat(temp8, $7.code);
 																																						char* _gotoL1 = concat("goto ", label1);
 																																						char* gotoL1 = concat(_gotoL1, semicolon_newline);
 																																						char* temp9_1 = concat(temp9, gotoL1);
@@ -602,15 +602,12 @@ variable	:
 																																						free(empty);
 																																					}
 	|	variable '[' expression ']'																						{	char* temp_vars3 = concat($3.temp_dec, $3.temp_aff);
-																																						char* temp1 = concat(temp_vars3, $1.code);
+																																						char* temp1 = concat("", $1.code);
 																																						char* temp2 = concat(temp1, lbracket);
 																																						char* temp3 = concat(temp2, $3.code);
 																																						$$.temp_dec = concat($1.temp_dec, $3.temp_dec);
 																																						$$.temp_aff = concat($1.temp_aff, $3.temp_aff);
 																																						$$.code = concat(temp3, rbracket);
-																																						/*char* temp1 = concat($1.code, lbracket);
-																																						char* temp2 = concat(temp1, $3.code);
-																																						$$.code = concat(temp2, rbracket);*/
 																																						free($1.code);
 																																						free($3.code);
 																																						free(temp1);
@@ -679,8 +676,8 @@ expression	:
 																																						$$.temp_aff = calloc(1,sizeof(char));
 																																						$$.code = concat(cste, empty);}
 	|	variable																															{ char* empty = "";
-																																						$$.temp_dec = calloc(1,sizeof(char));
-																																						$$.temp_aff = calloc(1,sizeof(char));
+																																						$$.temp_dec = $1.temp_dec;//calloc(1,sizeof(char));
+																																						$$.temp_aff = $1.temp_aff;//calloc(1,sizeof(char));
 																																						$$.code = $1.code;}
 	|	IDENTIFICATEUR '(' liste_expressions ')'															{ $$.temp_dec = $3.temp_dec;
 																																						$$.temp_aff = $3.temp_aff;
