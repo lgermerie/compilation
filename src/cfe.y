@@ -270,8 +270,9 @@ instruction	:
 																													free(empty);
 																													free($1.code);}
 	|	affectation ';'																			{ $1.switch_var = $$.switch_var;
-																													$$.code = concat($1.code, semicolon_newline);
-																													free($1.code);}
+																													$$.code = $1.code;//concat($1.code, semicolon_newline);
+																													//free($1.code);
+																												}
 	|	bloc																								{ $1.switch_var = $$.switch_var;
 																													char* empty = calloc(1, sizeof(char));
 																													$$.code = concat($1.code, empty);
@@ -289,8 +290,8 @@ iteration	:
 																																						char* label1 = new_label();
 																																						char* label2 = new_label();
 																																						char* temp0 = concat(label1, colon);
-																																						char* temp1 = concat($3.code, semicolon_newline);
-																																						char* ifnot = "if(!";
+																																						char* temp1 = concat($3.code, "");
+																																						char* ifnot = concat(label1, ": if(!");
 																																						char* go = ") goto ";
 																																						char* temp2 = concat(temp1, temp0);
 																																						char* temp3 = concat(temp1, ifnot);
@@ -300,7 +301,10 @@ iteration	:
 																																						char* temp7 = concat(temp6, semicolon_newline);
 																																						char* temp8 = concat(temp7, $9.code);
 																																						char* temp9 = concat(temp8, $7.code);//à remplacer par temp_vars peut être
-																																						char* temp10 = concat(temp9, label2);
+																																						char* _gotoL1 = concat("goto ", label1);
+																																						char* gotoL1 = concat(_gotoL1, semicolon_newline);
+																																						char* temp9_1 = concat(temp9, gotoL1);
+																																						char* temp10 = concat(temp9_1, label2);
 																																						$$.code = concat(temp10, colon);
 																																						free(temp0);
 																																						free(temp1);
@@ -315,6 +319,10 @@ iteration	:
 																																						free(temp10);
 																																						free(label1);
 																																						free(label2);
+																																						free(ifnot);
+																																						free(_gotoL1);
+																																						free(gotoL1);
+																																						free(temp9_1);
 																																						/*char* for_loop = "for(";
 																																						char* temp1 = concat(for_loop, $3.code);
 																																						char* temp2 = concat(temp1, semicolon);
