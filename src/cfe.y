@@ -269,12 +269,10 @@ instruction	:
 																													free(empty);
 																													free($1.code);}
 
-	|	affectation ';'																			{ $1.switch_var = $$.switch_var;
-																													$$.code = $1.code;//concat($1.code, semicolon_newline);
+	|	affectation ';'																			{ $$.code = $1.code;//concat($1.code, semicolon_newline);
 																													//free($1.code);
 																												}
-	|	bloc																								{ $1.switch_var = $$.switch_var;
-																													char* empty = calloc(1, sizeof(char));
+	|	bloc																								{ char* empty = calloc(1, sizeof(char));
 
 																													$$.code = concat($1.code, empty);
 																													free(empty);
