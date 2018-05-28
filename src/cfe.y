@@ -527,9 +527,7 @@ selection	:
 																																						free(label1);
 																																						free(cste);
 																																						free($4.code);}
-	|	DEFAULT ':' instruction																								{ char* default_kw = "default : ";
-																																						$$.code = concat(default_kw, $3.code);
-																																						free($3.code);}
+	|	DEFAULT ':' instruction																								{ $$.code = $3.code;}
 ;
 
 saut	:
@@ -820,9 +818,8 @@ void undefined_id_error(char *id_name) {
 }
 
 int main(void) {
+	fprintf(stdout, "#include \"printd.c\"\n");
 	yyparse();
-	fprintf(stdout, "\n\n---------------------------\n\nalright alright alright \n");
-
 	//print_tables();
 
 	clean_local();
