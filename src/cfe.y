@@ -457,12 +457,25 @@ selection	:
 																																						free(temp2);*/
 
 																																						char* switch_expr = strdup($3.code);
-																																						char* code = strdup($5.code);
 
-																																						$$.code = replace_substring(code, "...", switch_expr);
+																																						char* label = new_label();
+																																						char* temp1 = concat(label, colon);
+																																						char* temp2 = concat(temp1, newline);
+																																						char* code = concat($5.code, temp2);
+
+																																						char* temp3 = concat(go, label);
+																																						char* goto_break = concat(temp3, semicolon_newline);
+
+																																						code = replace_substring(code, "....", switch_expr);
+																																						$$.code = replace_substring_offset(code, "BREAK", goto_break, 5);
 
 																																						free(code);
 																																						free(switch_expr);
+																																						free(temp1);
+																																						free(temp2);
+																																						free(temp3);
+																																						free(goto_break);
+																																						free(label);
 
 
 																																					}
@@ -474,7 +487,8 @@ selection	:
 																																						free($4.code);
 																																						free(temp1);
 																																						free(temp2);*/
-																																						char* subst = "...";
+																																						char* subst = "....";
+																																						//char* subst_break = "_...\n";
 																																						char* iflpar = "if(";
 																																						char* nequals = " != ";
 																																						char* rpargoto = ") goto ";
@@ -487,9 +501,12 @@ selection	:
 																																						char* temp5 = concat(temp4, label1);
 																																						char* temp6 = concat(temp5, semicolon_newline);
 																																						char* temp7 = concat(temp6, $4.code);
+																																						//char* temp8 = concat(temp7, subst_break);
 																																						char* temp8 = concat(temp7, label1);
 																																						char* colon_nl = " :\n";
+
 																																						$$.code = concat(temp8, colon_nl);
+
 																																						free(temp1);
 																																						free(temp2);
 																																						free(temp3);
@@ -507,7 +524,7 @@ selection	:
 ;
 
 saut	:
-		BREAK ';'																															{ char* break_kw = "break;\n";
+		BREAK ';'																															{ char* break_kw = "BREAK\n";
 																																						char* empty = "";
 																																						$$.code = concat(break_kw, empty);}
 	|	RETURN ';'																														{ char* return_kw = "return;\n";

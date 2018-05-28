@@ -44,9 +44,30 @@ char* new_var() {
   return res;
 }
 
+// Inverse une chaîne de charactères
+void revert_str(char *chaine) {
+
+   int i,n;
+   char lettre;
+
+   n = strlen(chaine);
+
+   for(i = 0;i <n/2;i++) {
+
+       lettre = chaine[i];
+       chaine[i] = chaine[n-i-1];
+       chaine[n-i-1] = lettre;
+
+   }
+}
+
+char* replace_substring(char* string, char* sub_string_old, char* sub_string_new) {
+  return replace_substring_offset(string, sub_string_old, sub_string_new, 0);
+}
+
 
 // Remplace toutes les occurences de sub_string_old dans une string par sub_string_new
-char* replace_substring(char* string, char* sub_string_old, char* sub_string_new) {
+char* replace_substring_offset(char* string, char* sub_string_old, char* sub_string_new, int offset) {
 
   char* str_res = strndup(string, strlen(string));
   int delta = strlen(sub_string_new) - strlen(sub_string_old);
@@ -59,8 +80,9 @@ char* replace_substring(char* string, char* sub_string_old, char* sub_string_new
     char* new_str = malloc(strlen(str_res) + delta);
     memset(new_str, '\0', strlen(str_res) + delta);
 
-    strncat(new_str, str_res, position - str_res); // On copie tout le début de la chaine jusqu'à l'apparition du motif
+    strncat(new_str, str_res, position - str_res - offset); // On copie tout le début de la chaine jusqu'à l'apparition du motif
     strcat(new_str, sub_string_new);
+    strncat(new_str, position - offset, offset);
     strcat(new_str, position + strlen(sub_string_old));
 
     free(str_res);
@@ -75,16 +97,14 @@ char* replace_substring(char* string, char* sub_string_old, char* sub_string_new
 /*
 int main(int argc, char const *argv[]) {
 
-  char* test = strdup("T..T..");
+  char* test = strdup("AEIOU..AEIOU..");
   char* toto = strdup("tata");
 
-  char* titi = replace_substring(test, "..", "bite");
 
-
-  printf("%s\n", titi);
+  printf("%s\n", replace_substring(test, "..", "uu", 1));
   return 0;
-}
-*/
+}*/
+
 
 /****************************************************************
 Fonctions de gestion de la liste d'entiers

@@ -17,5 +17,6 @@ char* int_to_str(int n);
 char* concat(char* s1, char* s2);
 
 char* replace_substring(char* string, char* sub_string_old, char* sub_string_new);
+char* replace_substring_offset(char* string, char* sub_string_old, char* sub_string_new, int offset);
 
 #endif
