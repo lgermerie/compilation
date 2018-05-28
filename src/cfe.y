@@ -287,7 +287,7 @@ iteration	:
 		FOR '(' affectation ';' condition ';' affectation ')' instruction			{	char* empty = "";
 																																						char* label1 = new_label();
 																																						char* label2 = new_label();
-																																						char* temp0 = concat(label1, colon);
+																																						char* temp0 = concat(label1, ":;");
 																																						char* temp1 = concat($3.code, "");
 																																						char* ifnot = concat(label1, ": if(!(");
 																																						char* go = ")) goto ";
@@ -303,7 +303,7 @@ iteration	:
 																																						char* gotoL1 = concat(_gotoL1, semicolon_newline);
 																																						char* temp9_1 = concat(temp9, gotoL1);
 																																						char* temp10 = concat(temp9_1, label2);
-																																						$$.code = concat(temp10, colon);
+																																						$$.code = concat(temp10, ":;");
 																																						free(temp0);
 																																						free(temp1);
 																																						free(temp2);
